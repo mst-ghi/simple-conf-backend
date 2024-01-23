@@ -88,6 +88,15 @@ func (ctrl *Controller) NotFoundError(c *gin.Context, err Error) {
 	c.SecureJSON(http.StatusNotFound, response)
 }
 
+func (ctrl *Controller) BadRequestError(c *gin.Context, err Error) {
+	response := ToResponse(
+		messages.MessageBadRequest,
+		map[string]any{},
+		err,
+	)
+	c.SecureJSON(http.StatusBadRequest, response)
+}
+
 func Initialize() {
 	controller = &Controller{
 		Response: ResponseTemplate{

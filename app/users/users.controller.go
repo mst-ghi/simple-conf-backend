@@ -35,7 +35,7 @@ func (self *UsersController) FindAll(c *gin.Context) {
 // @accept  json
 // @produce json
 // @success 200 {object} core.Response[UserResponseType]
-// @param   id path int true "User ID"
+// @param   id path string true "User ID"
 func (self *UsersController) FindOne(c *gin.Context) {
 	user, err := self.service.FindOne(c.Param("id"))
 

@@ -7,6 +7,30 @@ import (
 
 type ResponseType map[string]any
 
+type UserShort struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+func UserShortTransform(user models.User) UserShort {
+	return UserShort{
+		ID:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+	}
+}
+
+func UsersShortTransform(users []models.User) []UserShort {
+	var data []UserShort
+
+	for _, user := range users {
+		data = append(data, UserShortTransform(user))
+	}
+
+	return data
+}
+
 type User struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
@@ -25,6 +49,16 @@ func UserTransform(user models.User) User {
 	}
 }
 
+func UsersTransform(users []models.User) []User {
+	var data []User
+
+	for _, user := range users {
+		data = append(data, UserTransform(user))
+	}
+
+	return data
+}
+
 type UserResponseType struct {
 	User User `json:"user"`
 }
@@ -40,13 +74,7 @@ type UsersResponseType struct {
 }
 
 func UsersResponse(users []models.User) ResponseType {
-	var data []User
-
-	for _, user := range users {
-		data = append(data, UserTransform(user))
-	}
-
 	return ResponseType{
-		"users": data,
+		"users": UsersTransform(users),
 	}
 }

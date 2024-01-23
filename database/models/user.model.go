@@ -15,6 +15,8 @@ type User struct {
 	Email    string `gorm:"type:varchar(191);unique;not null"`
 	Password string `gorm:"type:varchar(100);not null"`
 
+	Communities []Community `gorm:"many2many:community_users;"`
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

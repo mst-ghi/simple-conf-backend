@@ -2,6 +2,7 @@ package app
 
 import (
 	"video-conf/app/auth"
+	"video-conf/app/communities"
 	"video-conf/app/users"
 	"video-conf/core"
 
@@ -25,5 +26,6 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	{
 		auth.RegisterRoutes(v1Group)
 		users.RegisterRoutes(v1Group)
+		communities.RegisterRoutes(v1Group)
 	}
 }

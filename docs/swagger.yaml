@@ -56,10 +56,86 @@ definitions:
       tokens:
         $ref: '#/definitions/auth.Tokens'
     type: object
+  communities.CommunitiesResponseType:
+    properties:
+      communities:
+        items:
+          $ref: '#/definitions/communities.Community'
+        type: array
+    type: object
+  communities.Community:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      owner:
+        $ref: '#/definitions/communities.User'
+      owner_id:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/communities.User'
+        type: array
+    type: object
+  communities.CommunityResponseType:
+    properties:
+      community:
+        $ref: '#/definitions/communities.Community'
+    type: object
+  communities.CreateDto:
+    properties:
+      description:
+        maxLength: 250
+        minLength: 2
+        type: string
+      title:
+        maxLength: 190
+        minLength: 2
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  communities.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
   core.Response-auth_TokensResponseType:
     properties:
       data:
         $ref: '#/definitions/auth.TokensResponseType'
+      errors:
+        type: object
+      message:
+        type: string
+    type: object
+  core.Response-communities_CommunitiesResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/communities.CommunitiesResponseType'
+      errors:
+        type: object
+      message:
+        type: string
+    type: object
+  core.Response-communities_CommunityResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/communities.CommunityResponseType'
       errors:
         type: object
       message:
@@ -99,7 +175,7 @@ definitions:
       email:
         type: string
       id:
-        type: integer
+        type: string
       name:
         type: string
       updated_at:
@@ -221,6 +297,105 @@ paths:
       summary: fetch logged in user info
       tags:
       - Auth
+  /api/v1/communities:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-communities_CommunitiesResponseType'
+      summary: get list of communities
+      tags:
+      - Communities
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create community inputs
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/communities.CreateDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-communities_CommunityResponseType'
+      security:
+      - Bearer: []
+      summary: create new community
+      tags:
+      - Communities
+  /api/v1/communities/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Community ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-communities_CommunityResponseType'
+      summary: get community by id
+      tags:
+      - Communities
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Community ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: update community
+      tags:
+      - Communities
+  /api/v1/communities/{id}/join:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Community ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: join to community
+      tags:
+      - Communities
   /api/v1/users:
     get:
       consumes:
@@ -244,7 +419,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
