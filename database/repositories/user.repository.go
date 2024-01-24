@@ -25,30 +25,30 @@ func NewUserRepository() *UserRepository {
 	}
 }
 
-func (self *UserRepository) Connection() *gorm.DB {
-	return self.DB
+func (repo *UserRepository) Connection() *gorm.DB {
+	return repo.DB
 }
 
-func (self *UserRepository) Create(user models.User) models.User {
+func (repo *UserRepository) Create(user models.User) models.User {
 	var newUser models.User
-	self.DB.Create(&user).Scan(&newUser)
+	repo.DB.Create(&user).Scan(&newUser)
 	return newUser
 }
 
-func (self *UserRepository) FindByEmail(email string) models.User {
+func (repo *UserRepository) FindByEmail(email string) models.User {
 	var user models.User
-	self.DB.First(&user, "email = ?", email)
+	repo.DB.First(&user, "email = ?", email)
 	return user
 }
 
-func (self *UserRepository) FindByID(id string) models.User {
+func (repo *UserRepository) FindByID(id string) models.User {
 	var user models.User
-	self.DB.First(&user, "id = ?", id)
+	repo.DB.First(&user, "id = ?", id)
 	return user
 }
 
-func (self *UserRepository) FindAll() []models.User {
+func (repo *UserRepository) FindAll() []models.User {
 	var users []models.User
-	self.DB.Table("users").Find(&users)
+	repo.DB.Table("users").Find(&users)
 	return users
 }

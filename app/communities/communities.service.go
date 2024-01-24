@@ -8,10 +8,13 @@ import (
 
 type CommunitiesServiceInterface interface {
 	FindAll() []models.Community
+	OwnerCommunities(ownerId string) []models.Community
+	JoinedCommunities(ownerId string) []models.Community
 	FindOne(id string) (models.Community, core.Error)
 	Create(ownerId string, dto CreateDto) models.Community
 	Update(ownerId, id string, dto UpdateDto) core.Error
 	Join(communityId, userId string) core.Error
+	Left(communityId, userId string) core.Error
 }
 
 type CommunitiesService struct {
@@ -24,12 +27,20 @@ func NewCommunitiesService() *CommunitiesService {
 	}
 }
 
-func (self *CommunitiesService) FindAll() []models.Community {
-	return self.repository.FindAll()
+func (service *CommunitiesService) FindAll() []models.Community {
+	return service.repository.FindAll()
 }
 
-func (self *CommunitiesService) FindOne(id string) (models.Community, core.Error) {
-	community := self.repository.FindByID(id)
+func (service *CommunitiesService) OwnerCommunities(ownerId string) []models.Community {
+	return service.repository.OwnerCommunities(ownerId)
+}
+
+func (service *CommunitiesService) JoinedCommunities(ownerId string) []models.Community {
+	return service.repository.JoinedCommunities(ownerId)
+}
+
+func (service *CommunitiesService) FindOne(id string) (models.Community, core.Error) {
+	community := service.repository.FindByID(id)
 
 	if community.ID == "" {
 		return community, core.Error{"reason": "Community not found"}
@@ -38,18 +49,18 @@ func (self *CommunitiesService) FindOne(id string) (models.Community, core.Error
 	return community, nil
 }
 
-func (self *CommunitiesService) Create(ownerId string, dto CreateDto) models.Community {
+func (service *CommunitiesService) Create(ownerId string, dto CreateDto) models.Community {
 	community := models.Community{
 		OwnerID:     ownerId,
 		Title:       dto.Title,
 		Description: &dto.Description,
 		Status:      models.COMMUNITY_ACTIVE_STATUS,
 	}
-	return self.repository.Create(community)
+	return service.repository.Create(community)
 }
 
-func (self *CommunitiesService) Update(ownerId, id string, dto UpdateDto) core.Error {
-	community := self.repository.FindByIDAndOwnerID(id, ownerId)
+func (service *CommunitiesService) Update(ownerId, id string, dto UpdateDto) core.Error {
+	community := service.repository.FindByIDAndOwnerID(id, ownerId)
 
 	if community.ID != "" {
 		return core.Error{"reason": "Community not found"}
@@ -58,19 +69,31 @@ func (self *CommunitiesService) Update(ownerId, id string, dto UpdateDto) core.E
 	community.Title = dto.Title
 	community.Description = &dto.Description
 
-	self.repository.Connection().Save(community)
+	service.repository.Connection().Save(community)
 
 	return nil
 }
 
-func (self *CommunitiesService) Join(communityId, userId string) core.Error {
-	community := self.repository.FindOneCommunityUser(communityId, userId)
+func (service *CommunitiesService) Join(communityId, userId string) core.Error {
+	community := service.repository.FindOneCommunityUser(communityId, userId)
 
 	if community.CommunityID == communityId {
 		return core.Error{"reason": "You join to community before"}
 	}
 
-	self.repository.AppendCommunityUser(communityId, userId)
+	service.repository.AppendCommunityUser(communityId, userId)
+
+	return nil
+}
+
+func (service *CommunitiesService) Left(communityId, userId string) core.Error {
+	community := service.repository.FindOneCommunityUser(communityId, userId)
+
+	if community.CommunityID != "" {
+		return core.Error{"reason": "You are not a member of the community"}
+	}
+
+	service.repository.DeleteCommunityUser(communityId, userId)
 
 	return nil
 }

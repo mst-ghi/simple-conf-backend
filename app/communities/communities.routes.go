@@ -20,5 +20,8 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		authGroup.POST("/", ctrl.Create)
 		authGroup.PUT("/:id", ctrl.Update)
 		authGroup.PUT("/:id/join", ctrl.Join)
+		authGroup.PUT("/:id/left", ctrl.Left)
+		authGroup.GET("/own", ctrl.OwnerCommunities)
+		authGroup.GET("/joined", ctrl.JoinedCommunities)
 	}
 }

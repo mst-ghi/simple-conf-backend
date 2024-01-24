@@ -72,7 +72,7 @@ definitions:
       id:
         type: string
       owner:
-        $ref: '#/definitions/communities.User'
+        $ref: '#/definitions/users.UserShort'
       owner_id:
         type: string
       status:
@@ -83,7 +83,7 @@ definitions:
         type: string
       users:
         items:
-          $ref: '#/definitions/communities.User'
+          $ref: '#/definitions/users.UserShort'
         type: array
     type: object
   communities.CommunityResponseType:
@@ -104,15 +104,6 @@ definitions:
     required:
     - description
     - title
-    type: object
-  communities.User:
-    properties:
-      email:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
     type: object
   core.Response-auth_TokensResponseType:
     properties:
@@ -185,6 +176,15 @@ definitions:
     properties:
       user:
         $ref: '#/definitions/users.User'
+    type: object
+  users.UserShort:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
     type: object
   users.UsersResponseType:
     properties:
@@ -394,6 +394,60 @@ paths:
       security:
       - Bearer: []
       summary: join to community
+      tags:
+      - Communities
+  /api/v1/communities/{id}/left:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Community ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: left from community
+      tags:
+      - Communities
+  /api/v1/communities/joined:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-communities_CommunitiesResponseType'
+      security:
+      - Bearer: []
+      summary: get list of joined communities
+      tags:
+      - Communities
+  /api/v1/communities/own:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-communities_CommunitiesResponseType'
+      security:
+      - Bearer: []
+      summary: get list of own communities
       tags:
       - Communities
   /api/v1/users:

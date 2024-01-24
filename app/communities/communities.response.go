@@ -37,7 +37,7 @@ func CommunityTransform(community models.Community) Community {
 }
 
 func CommunitiesTransform(communities []models.Community) []Community {
-	var data []Community
+	data := []Community{}
 
 	for _, community := range communities {
 		data = append(data, CommunityTransform(community))

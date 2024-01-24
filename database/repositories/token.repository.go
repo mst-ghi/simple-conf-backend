@@ -30,19 +30,19 @@ func NewTokenRepository() *TokenRepository {
 	}
 }
 
-func (self *TokenRepository) Connection() *gorm.DB {
-	return self.DB
+func (repo *TokenRepository) Connection() *gorm.DB {
+	return repo.DB
 }
 
-func (self *TokenRepository) Clearing(userId string, wg *sync.WaitGroup) {
+func (repo *TokenRepository) Clearing(userId string, wg *sync.WaitGroup) {
 	defer wg.Done()
-	self.DB.
+	repo.DB.
 		Where("refresh_expires_at < ?", time.Now()).
 		Where("user_id = ?", userId).
 		Delete(&models.Token{})
 }
 
-func (self *TokenRepository) Create(userId string) (string, string, string) {
+func (repo *TokenRepository) Create(userId string) (string, string, string) {
 	var token models.Token
 
 	accessTokenUUID, _ := helpers.UUID()
@@ -53,15 +53,15 @@ func (self *TokenRepository) Create(userId string) (string, string, string) {
 	token.RefreshToken = refreshTokenUUID
 	token.Invoked = false
 
-	self.DB.Create(&token).Scan(&token)
+	repo.DB.Create(&token).Scan(&token)
 
 	return accessTokenUUID, refreshTokenUUID, token.AccessExpiresAt.Format(time.RFC3339)
 }
 
-func (self *TokenRepository) FindByAccess(access string) models.Token {
+func (repo *TokenRepository) FindByAccess(access string) models.Token {
 	var token models.Token
 
-	self.DB.
+	repo.DB.
 		Joins("User").
 		Where(&models.Token{AccessToken: helpers.SHA1(access)}, "access_token", "invoked").
 		Where("access_expires_at > ?", time.Now()).
@@ -70,15 +70,15 @@ func (self *TokenRepository) FindByAccess(access string) models.Token {
 	return token
 }
 
-func (self *TokenRepository) DeleteByAccess(access string) {
-	self.DB.
+func (repo *TokenRepository) DeleteByAccess(access string) {
+	repo.DB.
 		Where(&models.Token{AccessToken: access}, "access_token").
 		Delete(&models.Token{})
 }
 
-func (self *TokenRepository) FindByRefresh(refresh string) models.Token {
+func (repo *TokenRepository) FindByRefresh(refresh string) models.Token {
 	var token models.Token
-	self.DB.
+	repo.DB.
 		Joins("User").
 		Where(&models.Token{RefreshToken: helpers.SHA1(refresh)}, "refresh_token", "invoked").
 		Where("refresh_expires_at > ?", time.Now()).
@@ -86,9 +86,9 @@ func (self *TokenRepository) FindByRefresh(refresh string) models.Token {
 	return token
 }
 
-func (self *TokenRepository) FindByRefreshAndAccess(access, refresh string) models.Token {
+func (repo *TokenRepository) FindByRefreshAndAccess(access, refresh string) models.Token {
 	var token models.Token
-	self.DB.
+	repo.DB.
 		Joins("User").
 		Where(&models.Token{AccessToken: helpers.SHA1(access), RefreshToken: helpers.SHA1(refresh)}, "access_token", "refresh_token", "invoked").
 		Where("refresh_expires_at > ?", time.Now()).

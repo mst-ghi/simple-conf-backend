@@ -24,9 +24,35 @@ func NewCommunitiesController() *CommunitiesController {
 // @accept  json
 // @produce json
 // @success 200 {object} core.Response[CommunitiesResponseType]
-func (self *CommunitiesController) FindAll(c *gin.Context) {
-	communities := self.service.FindAll()
-	self.root.Success(c, CommunitiesResponse(communities))
+func (ctrl *CommunitiesController) FindAll(c *gin.Context) {
+	communities := ctrl.service.FindAll()
+	ctrl.root.Success(c, CommunitiesResponse(communities))
+}
+
+// @tags     Communities
+// @security Bearer
+// @router   /api/v1/communities/own [get]
+// @summary  get list of own communities
+// @accept   json
+// @produce  json
+// @success  200 {object} core.Response[CommunitiesResponseType]
+func (ctrl *CommunitiesController) OwnerCommunities(c *gin.Context) {
+	user := core.User(c)
+	communities := ctrl.service.OwnerCommunities(user.ID)
+	ctrl.root.Success(c, CommunitiesResponse(communities))
+}
+
+// @tags     Communities
+// @security Bearer
+// @router   /api/v1/communities/joined [get]
+// @summary  get list of joined communities
+// @accept   json
+// @produce  json
+// @success  200 {object} core.Response[CommunitiesResponseType]
+func (ctrl *CommunitiesController) JoinedCommunities(c *gin.Context) {
+	user := core.User(c)
+	communities := ctrl.service.JoinedCommunities(user.ID)
+	ctrl.root.Success(c, CommunitiesResponse(communities))
 }
 
 // @tags    Communities
@@ -36,15 +62,15 @@ func (self *CommunitiesController) FindAll(c *gin.Context) {
 // @produce json
 // @success 200 {object} core.Response[CommunityResponseType]
 // @param   id path string true "Community ID"
-func (self *CommunitiesController) FindOne(c *gin.Context) {
-	community, err := self.service.FindOne(c.Param("id"))
+func (ctrl *CommunitiesController) FindOne(c *gin.Context) {
+	community, err := ctrl.service.FindOne(c.Param("id"))
 
 	if err != nil {
-		self.root.NotFoundError(c, err)
+		ctrl.root.NotFoundError(c, err)
 		return
 	}
 
-	self.root.Success(c, CommunityResponse(community))
+	ctrl.root.Success(c, CommunityResponse(community))
 }
 
 // @tags     Communities
@@ -55,18 +81,18 @@ func (self *CommunitiesController) FindOne(c *gin.Context) {
 // @produce  json
 // @success  200 {object} core.Response[CommunityResponseType]
 // @param    request body CreateDto true "Create community inputs"
-func (self *CommunitiesController) Create(c *gin.Context) {
+func (ctrl *CommunitiesController) Create(c *gin.Context) {
 	var dto CreateDto
 
 	if err := c.ShouldBindJSON(&dto); err != nil {
-		self.root.JsonBindError(c, err)
+		ctrl.root.JsonBindError(c, err)
 		return
 	}
 
 	user := core.User(c)
-	community := self.service.Create(user.ID, dto)
+	community := ctrl.service.Create(user.ID, dto)
 
-	self.root.Success(c, CommunityResponse(community))
+	ctrl.root.Success(c, CommunityResponse(community))
 }
 
 // @tags     Communities
@@ -77,25 +103,25 @@ func (self *CommunitiesController) Create(c *gin.Context) {
 // @produce  json
 // @success  200 {object} core.SuccessResponse
 // @param    id path string true "Community ID"
-func (self *CommunitiesController) Update(c *gin.Context) {
+func (ctrl *CommunitiesController) Update(c *gin.Context) {
 	var dto UpdateDto
 
 	if err := c.ShouldBindJSON(&dto); err != nil {
-		self.root.JsonBindError(c, err)
+		ctrl.root.JsonBindError(c, err)
 		return
 	}
 
 	user := core.User(c)
 	communityId := c.Param("id")
 
-	err := self.service.Update(user.ID, communityId, dto)
+	err := ctrl.service.Update(user.ID, communityId, dto)
 
 	if err != nil {
-		self.root.NotFoundError(c, err)
+		ctrl.root.NotFoundError(c, err)
 		return
 	}
 
-	self.root.Success(c, nil)
+	ctrl.root.Success(c, nil)
 }
 
 // @tags     Communities
@@ -106,16 +132,38 @@ func (self *CommunitiesController) Update(c *gin.Context) {
 // @produce  json
 // @success  200 {object} core.SuccessResponse
 // @param    id path string true "Community ID"
-func (self *CommunitiesController) Join(c *gin.Context) {
+func (ctrl *CommunitiesController) Join(c *gin.Context) {
 	user := core.User(c)
 	communityId := c.Param("id")
 
-	err := self.service.Join(communityId, user.ID)
+	err := ctrl.service.Join(communityId, user.ID)
 
 	if err != nil {
-		self.root.BadRequestError(c, err)
+		ctrl.root.BadRequestError(c, err)
 		return
 	}
 
-	self.root.Success(c, nil)
+	ctrl.root.Success(c, nil)
+}
+
+// @tags     Communities
+// @security Bearer
+// @router   /api/v1/communities/{id}/left [put]
+// @summary  left from community
+// @accept   json
+// @produce  json
+// @success  200 {object} core.SuccessResponse
+// @param    id path string true "Community ID"
+func (ctrl *CommunitiesController) Left(c *gin.Context) {
+	user := core.User(c)
+	communityId := c.Param("id")
+
+	err := ctrl.service.Left(communityId, user.ID)
+
+	if err != nil {
+		ctrl.root.BadRequestError(c, err)
+		return
+	}
+
+	ctrl.root.Success(c, nil)
 }

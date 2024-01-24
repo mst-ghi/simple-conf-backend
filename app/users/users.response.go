@@ -22,7 +22,7 @@ func UserShortTransform(user models.User) UserShort {
 }
 
 func UsersShortTransform(users []models.User) []UserShort {
-	var data []UserShort
+	var data = []UserShort{}
 
 	for _, user := range users {
 		data = append(data, UserShortTransform(user))
@@ -50,7 +50,7 @@ func UserTransform(user models.User) User {
 }
 
 func UsersTransform(users []models.User) []User {
-	var data []User
+	var data = []User{}
 
 	for _, user := range users {
 		data = append(data, UserTransform(user))

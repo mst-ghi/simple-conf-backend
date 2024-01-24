@@ -235,6 +235,60 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/communities/joined": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "get list of joined communities",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response-communities_CommunitiesResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/communities/own": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "get list of own communities",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response-communities_CommunitiesResponseType"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/communities/{id}": {
             "get": {
                 "consumes": [
@@ -317,6 +371,42 @@ const docTemplate = `{
                     "Communities"
                 ],
                 "summary": "join to community",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Community ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/communities/{id}/left": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Communities"
+                ],
+                "summary": "left from community",
                 "parameters": [
                     {
                         "type": "string",
@@ -496,7 +586,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "owner": {
-                    "$ref": "#/definitions/communities.User"
+                    "$ref": "#/definitions/users.UserShort"
                 },
                 "owner_id": {
                     "type": "string"
@@ -513,7 +603,7 @@ const docTemplate = `{
                 "users": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/communities.User"
+                        "$ref": "#/definitions/users.UserShort"
                     }
                 }
             }
@@ -542,20 +632,6 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 190,
                     "minLength": 2
-                }
-            }
-        },
-        "communities.User": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
                 }
             }
         },
@@ -668,6 +744,20 @@ const docTemplate = `{
             "properties": {
                 "user": {
                     "$ref": "#/definitions/users.User"
+                }
+            }
+        },
+        "users.UserShort": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },

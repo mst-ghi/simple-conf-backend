@@ -13,8 +13,11 @@ type CommunityRepositoryInterface interface {
 	FindByID(id string) models.Community
 	FindByIDAndOwnerID(id, ownerId string) models.Community
 	FindAll() []models.Community
+	OwnerCommunities(ownerId string) []models.Community
+	JoinedCommunities(ownerId string) []models.Community
 	FindOneCommunityUser(communityId, userId string) models.CommunityUser
 	AppendCommunityUser(communityId, userId string) models.CommunityUser
+	DeleteCommunityUser(communityId, userId string)
 }
 
 type CommunityRepository struct {
@@ -27,20 +30,20 @@ func NewCommunityRepository() *CommunityRepository {
 	}
 }
 
-func (self *CommunityRepository) Connection() *gorm.DB {
-	return self.DB
+func (repo *CommunityRepository) Connection() *gorm.DB {
+	return repo.DB
 }
 
-func (self *CommunityRepository) Create(community models.Community) models.Community {
+func (repo *CommunityRepository) Create(community models.Community) models.Community {
 	var newCommunity models.Community
-	self.DB.Create(&community).Scan(&newCommunity)
+	repo.DB.Create(&community).Scan(&newCommunity)
 	return newCommunity
 }
 
-func (self *CommunityRepository) FindByID(id string) models.Community {
+func (repo *CommunityRepository) FindByID(id string) models.Community {
 	var community models.Community
 
-	self.DB.
+	repo.DB.
 		Where("status = ?", models.COMMUNITY_ACTIVE_STATUS).
 		Preload("Owner", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select("id", "email", "name")
@@ -53,10 +56,10 @@ func (self *CommunityRepository) FindByID(id string) models.Community {
 	return community
 }
 
-func (self *CommunityRepository) FindByIDAndOwnerID(id, ownerId string) models.Community {
+func (repo *CommunityRepository) FindByIDAndOwnerID(id, ownerId string) models.Community {
 	var community models.Community
 
-	self.DB.
+	repo.DB.
 		Where("id = ?", id).Where("owner_id = ?", ownerId).
 		Preload("Owner", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select("id", "email", "name")
@@ -69,10 +72,10 @@ func (self *CommunityRepository) FindByIDAndOwnerID(id, ownerId string) models.C
 	return community
 }
 
-func (self *CommunityRepository) FindAll() []models.Community {
+func (repo *CommunityRepository) FindAll() []models.Community {
 	var communities []models.Community
 
-	self.DB.
+	repo.DB.
 		Table("communities").
 		Where("status = ?", models.COMMUNITY_ACTIVE_STATUS).
 		Preload("Owner", func(tx *gorm.DB) *gorm.DB {
@@ -86,10 +89,47 @@ func (self *CommunityRepository) FindAll() []models.Community {
 	return communities
 }
 
-func (self *CommunityRepository) FindOneCommunityUser(communityId, userId string) models.CommunityUser {
+func (repo *CommunityRepository) OwnerCommunities(ownerId string) []models.Community {
+	var communities []models.Community
+
+	repo.DB.
+		Table("communities").
+		Where("owner_id = ?", ownerId).
+		Preload("Owner", func(tx *gorm.DB) *gorm.DB {
+			return tx.Select("id", "email", "name")
+		}).
+		Preload("Users", func(tx *gorm.DB) *gorm.DB {
+			return tx.Select("id", "email", "name")
+		}).
+		Find(&communities)
+
+	return communities
+}
+
+func (repo *CommunityRepository) JoinedCommunities(ownerId string) []models.Community {
+	var user models.User
+
+	repo.DB.Table("users").
+		Where("id = ?", ownerId).
+		Preload("Communities", func(tx *gorm.DB) *gorm.DB {
+			return tx.
+				Where("status = ?", models.COMMUNITY_ACTIVE_STATUS).
+				Preload("Owner", func(tx *gorm.DB) *gorm.DB {
+					return tx.Select("id", "email", "name")
+				}).
+				Preload("Users", func(tx *gorm.DB) *gorm.DB {
+					return tx.Select("id", "email", "name")
+				})
+		}).
+		First(&user)
+
+	return user.Communities
+}
+
+func (repo *CommunityRepository) FindOneCommunityUser(communityId, userId string) models.CommunityUser {
 	var communityUser models.CommunityUser
 
-	self.DB.
+	repo.DB.
 		Raw(
 			"SELECT * FROM community_users WHERE community_id = ? AND user_id = ?",
 			communityId,
@@ -100,10 +140,10 @@ func (self *CommunityRepository) FindOneCommunityUser(communityId, userId string
 	return communityUser
 }
 
-func (self *CommunityRepository) AppendCommunityUser(communityId, userId string) models.CommunityUser {
+func (repo *CommunityRepository) AppendCommunityUser(communityId, userId string) models.CommunityUser {
 	var communityUser models.CommunityUser
 
-	self.DB.
+	repo.DB.
 		Raw(
 			"INSERT INTO community_users (community_id, user_id) VALUES(?, ?)",
 			communityId,
@@ -112,4 +152,13 @@ func (self *CommunityRepository) AppendCommunityUser(communityId, userId string)
 		Scan(&communityUser)
 
 	return communityUser
+}
+
+func (repo *CommunityRepository) DeleteCommunityUser(communityId, userId string) {
+	repo.DB.
+		Exec(
+			"DELETE FROM community_users WHERE community_id = ? AND user_id = ?",
+			communityId,
+			userId,
+		)
 }
