@@ -21,12 +21,12 @@ func NewUsersService() *UsersService {
 	}
 }
 
-func (self *UsersService) FindAll() []models.User {
-	return self.repository.FindAll()
+func (service *UsersService) FindAll() []models.User {
+	return service.repository.FindAll()
 }
 
-func (self *UsersService) FindOne(id string) (models.User, core.Error) {
-	user := self.repository.FindByID(id)
+func (service *UsersService) FindOne(id string) (models.User, core.Error) {
+	user := service.repository.FindByID(id)
 
 	if user.ID == "" {
 		return user, core.Error{"reason": "User not found"}

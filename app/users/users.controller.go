@@ -24,9 +24,9 @@ func NewUsersController() *UsersController {
 // @accept  json
 // @produce json
 // @success 200 {object} core.Response[UsersResponseType]
-func (self *UsersController) FindAll(c *gin.Context) {
-	users := self.service.FindAll()
-	self.root.Success(c, UsersResponse(users))
+func (ctrl *UsersController) FindAll(c *gin.Context) {
+	users := ctrl.service.FindAll()
+	ctrl.root.Success(c, UsersResponse(users))
 }
 
 // @tags    Users
@@ -36,13 +36,13 @@ func (self *UsersController) FindAll(c *gin.Context) {
 // @produce json
 // @success 200 {object} core.Response[UserResponseType]
 // @param   id path string true "User ID"
-func (self *UsersController) FindOne(c *gin.Context) {
-	user, err := self.service.FindOne(c.Param("id"))
+func (ctrl *UsersController) FindOne(c *gin.Context) {
+	user, err := ctrl.service.FindOne(c.Param("id"))
 
 	if err != nil {
-		self.root.NotFoundError(c, err)
+		ctrl.root.NotFoundError(c, err)
 		return
 	}
 
-	self.root.Success(c, UserResponse(user))
+	ctrl.root.Success(c, UserResponse(user))
 }
