@@ -15,3 +15,8 @@ type RefreshDto struct {
 	AccessToken  string `json:"access_token" binding:"required,min=30,max=50"`
 	RefreshToken string `json:"refresh_token" binding:"required,min=30,max=50"`
 }
+
+type PasswordDto struct {
+	CurrentPassword string `json:"current_password" binding:"required,min=8,max=90"`
+	NewPassword string `json:"new_password" binding:"required,min=8,max=90"`
+}

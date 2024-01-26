@@ -103,6 +103,7 @@ func (ctrl *CommunitiesController) Create(c *gin.Context) {
 // @produce  json
 // @success  200 {object} core.SuccessResponse
 // @param    id path string true "Community ID"
+// @param    request body UpdateDto true "Update community inputs"
 func (ctrl *CommunitiesController) Update(c *gin.Context) {
 	var dto UpdateDto
 

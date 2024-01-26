@@ -12,6 +12,7 @@ type AuthServiceInterface interface {
 	Register(dto RegisterDto) core.Error
 	Refresh(dto RefreshDto) (Tokens, core.Error)
 	Logout(token string)
+	ChangePassword(user models.User, dto PasswordDto) core.Error
 }
 
 type AuthService struct {
@@ -26,10 +27,10 @@ func NewAuthService() *AuthService {
 	}
 }
 
-func (self *AuthService) Login(dto LoginDto) (Tokens, core.Error) {
+func (service *AuthService) Login(dto LoginDto) (Tokens, core.Error) {
 	var tokens Tokens
 
-	user := self.userRepository.FindByEmail(dto.Email)
+	user := service.userRepository.FindByEmail(dto.Email)
 
 	if user.ID == "" || !user.CheckPasswordHash(dto.Password) {
 		return tokens, core.Error{"email": "Invalid input data"}
@@ -38,9 +39,9 @@ func (self *AuthService) Login(dto LoginDto) (Tokens, core.Error) {
 	var waitGroup sync.WaitGroup
 	waitGroup.Add(1)
 
-	go self.tokenRepository.Clearing(user.ID, &waitGroup)
+	go service.tokenRepository.Clearing(user.ID, &waitGroup)
 
-	accessToken, refreshToken, expiresAt := self.tokenRepository.Create(user.ID)
+	accessToken, refreshToken, expiresAt := service.tokenRepository.Create(user.ID)
 
 	tokens.AccessToken = accessToken
 	tokens.RefreshToken = refreshToken
@@ -50,23 +51,23 @@ func (self *AuthService) Login(dto LoginDto) (Tokens, core.Error) {
 	return tokens, nil
 }
 
-func (self *AuthService) Register(dto RegisterDto) core.Error {
-	user := self.userRepository.FindByEmail(dto.Email)
+func (service *AuthService) Register(dto RegisterDto) core.Error {
+	user := service.userRepository.FindByEmail(dto.Email)
 
 	if user.ID != "" {
 		return core.Error{"email": "User exist with this email"}
 	}
 
 	user = models.User{Name: dto.Name, Email: dto.Email, Password: dto.Password}
-	self.userRepository.Create(user)
+	service.userRepository.Create(user)
 
 	return nil
 }
 
-func (self *AuthService) Refresh(dto RefreshDto) (Tokens, core.Error) {
+func (service *AuthService) Refresh(dto RefreshDto) (Tokens, core.Error) {
 	var tokens Tokens
 
-	token := self.tokenRepository.FindByRefreshAndAccess(dto.AccessToken, dto.RefreshToken)
+	token := service.tokenRepository.FindByRefreshAndAccess(dto.AccessToken, dto.RefreshToken)
 
 	if token.ID == "" {
 		return tokens, core.Error{"access_token": "Access token is invalid", "refresh_token": "Refresh token is invalid"}
@@ -77,9 +78,9 @@ func (self *AuthService) Refresh(dto RefreshDto) (Tokens, core.Error) {
 	var waitGroup sync.WaitGroup
 	waitGroup.Add(1)
 
-	go self.tokenRepository.Clearing(user.ID, &waitGroup)
+	go service.tokenRepository.Clearing(user.ID, &waitGroup)
 
-	accessToken, refreshToken, expiresAt := self.tokenRepository.Create(user.ID)
+	accessToken, refreshToken, expiresAt := service.tokenRepository.Create(user.ID)
 
 	tokens.AccessToken = accessToken
 	tokens.RefreshToken = refreshToken
@@ -87,10 +88,26 @@ func (self *AuthService) Refresh(dto RefreshDto) (Tokens, core.Error) {
 
 	waitGroup.Wait()
 
-	self.tokenRepository.DeleteByAccess(token.AccessToken)
+	service.tokenRepository.DeleteByAccess(token.AccessToken)
 	return tokens, nil
 }
 
-func (self *AuthService) Logout(token string) {
-	self.tokenRepository.DeleteByAccess(token)
+func (service *AuthService) Logout(token string) {
+	service.tokenRepository.DeleteByAccess(token)
+}
+
+func (service *AuthService) ChangePassword(user models.User, dto PasswordDto) core.Error {
+	if user.ID == "" || !user.CheckPasswordHash(dto.CurrentPassword) {
+		return core.Error{"current_password": "Current password is invalid"}
+	}
+
+	hashedPassword, err := models.HashPassword(dto.NewPassword)
+
+	if err != nil {
+		return core.Error{"reason": "Password hashing has error"}
+	}
+
+	service.userRepository.Connection().Model(&user).Update("password", hashedPassword)
+
+	return nil
 }

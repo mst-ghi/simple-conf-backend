@@ -20,5 +20,6 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	{
 		authGroup.GET("/user", ctrl.User)
 		authGroup.GET("/logout", ctrl.Logout)
+		authGroup.PUT("/password", ctrl.ChangePassword)
 	}
 }

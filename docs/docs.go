@@ -84,6 +84,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/auth/password": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "change logged in user password",
+                "parameters": [
+                    {
+                        "description": "Change password inputs",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.PasswordDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/auth/refresh": {
             "post": {
                 "consumes": [
@@ -342,6 +380,15 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Update community inputs",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/communities.UpdateDto"
+                        }
                     }
                 ],
                 "responses": {
@@ -498,6 +545,25 @@ const docTemplate = `{
                 }
             }
         },
+        "auth.PasswordDto": {
+            "type": "object",
+            "required": [
+                "current_password",
+                "new_password"
+            ],
+            "properties": {
+                "current_password": {
+                    "type": "string",
+                    "maxLength": 90,
+                    "minLength": 8
+                },
+                "new_password": {
+                    "type": "string",
+                    "maxLength": 90,
+                    "minLength": 8
+                }
+            }
+        },
         "auth.RefreshDto": {
             "type": "object",
             "required": [
@@ -617,6 +683,25 @@ const docTemplate = `{
             }
         },
         "communities.CreateDto": {
+            "type": "object",
+            "required": [
+                "description",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 250,
+                    "minLength": 2
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 190,
+                    "minLength": 2
+                }
+            }
+        },
+        "communities.UpdateDto": {
             "type": "object",
             "required": [
                 "description",

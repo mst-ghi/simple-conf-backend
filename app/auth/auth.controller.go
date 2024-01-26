@@ -26,22 +26,22 @@ func NewAuthController() *AuthController {
 // @produce json
 // @success 200 {object} core.Response[TokensResponseType]
 // @param   request body LoginDto true "Login inputs"
-func (self *AuthController) Login(c *gin.Context) {
+func (ctrl *AuthController) Login(c *gin.Context) {
 	var data LoginDto
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		self.root.JsonBindError(c, err)
+		ctrl.root.JsonBindError(c, err)
 		return
 	}
 
-	tokens, err := self.service.Login(data)
+	tokens, err := ctrl.service.Login(data)
 
 	if err != nil {
-		self.root.UnprocessableError(c, err)
+		ctrl.root.UnprocessableError(c, err)
 		return
 	}
 
-	self.root.Success(c, TokensResponse(tokens))
+	ctrl.root.Success(c, TokensResponse(tokens))
 }
 
 // @tags    Auth
@@ -51,20 +51,20 @@ func (self *AuthController) Login(c *gin.Context) {
 // @produce json
 // @success 200 {object} core.SuccessResponse
 // @param   request body RegisterDto true "Register inputs"
-func (self *AuthController) Register(c *gin.Context) {
+func (ctrl *AuthController) Register(c *gin.Context) {
 	var dto RegisterDto
 
 	if err := c.ShouldBindJSON(&dto); err != nil {
-		self.root.JsonBindError(c, err)
+		ctrl.root.JsonBindError(c, err)
 		return
 	}
 
-	if err := self.service.Register(dto); err != nil {
-		self.root.UnprocessableError(c, err)
+	if err := ctrl.service.Register(dto); err != nil {
+		ctrl.root.UnprocessableError(c, err)
 		return
 	}
 
-	self.root.Success(c, nil)
+	ctrl.root.Success(c, nil)
 }
 
 // @tags    Auth
@@ -74,22 +74,22 @@ func (self *AuthController) Register(c *gin.Context) {
 // @produce json
 // @success 200 {object} core.Response[TokensResponseType]
 // @param   request body RefreshDto true "Refresh tokens inputs"
-func (self *AuthController) Refresh(c *gin.Context) {
+func (ctrl *AuthController) Refresh(c *gin.Context) {
 	var data RefreshDto
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		self.root.JsonBindError(c, err)
+		ctrl.root.JsonBindError(c, err)
 		return
 	}
 
-	tokens, err := self.service.Refresh(data)
+	tokens, err := ctrl.service.Refresh(data)
 
 	if err != nil {
-		self.root.UnprocessableError(c, err)
+		ctrl.root.UnprocessableError(c, err)
 		return
 	}
 
-	self.root.Success(c, TokensResponse(tokens))
+	ctrl.root.Success(c, TokensResponse(tokens))
 }
 
 // @tags     Auth
@@ -99,9 +99,9 @@ func (self *AuthController) Refresh(c *gin.Context) {
 // @accept   json
 // @produce  json
 // @success  200 {object} core.Response[users.UserResponseType]
-func (self *AuthController) User(c *gin.Context) {
+func (ctrl *AuthController) User(c *gin.Context) {
 	user := core.User(c)
-	self.root.Success(c, users.UserResponse(user))
+	ctrl.root.Success(c, users.UserResponse(user))
 }
 
 // @tags     Auth
@@ -111,7 +111,34 @@ func (self *AuthController) User(c *gin.Context) {
 // @accept   json
 // @produce  json
 // @success  200 {object} core.SuccessResponse
-func (self *AuthController) Logout(c *gin.Context) {
-	self.service.Logout(core.Token(c))
-	self.root.Success(c, nil)
+func (ctrl *AuthController) Logout(c *gin.Context) {
+	ctrl.service.Logout(core.Token(c))
+	ctrl.root.Success(c, nil)
+}
+
+// @tags     Auth
+// @security Bearer
+// @router   /api/v1/auth/password [put]
+// @summary  change logged in user password
+// @accept   json
+// @produce  json
+// @success  200 {object} core.SuccessResponse
+// @param   request body PasswordDto true "Change password inputs"
+func (ctrl *AuthController) ChangePassword(c *gin.Context) {
+	var dto PasswordDto
+
+	if err := c.ShouldBindJSON(&dto); err != nil {
+		ctrl.root.JsonBindError(c, err)
+		return
+	}
+
+	user := core.User(c)
+	err := ctrl.service.ChangePassword(user, dto)
+
+	if err != nil {
+		ctrl.root.UnprocessableError(c, err)
+		return
+	}
+
+	ctrl.root.Success(c, nil)
 }
