@@ -66,10 +66,10 @@ func (service *CommunitiesService) Update(ownerId, id string, dto UpdateDto) cor
 		return core.Error{"reason": "Community not found"}
 	}
 
-	community.Title = dto.Title
-	community.Description = &dto.Description
-
-	service.repository.Connection().Save(community)
+	service.repository.
+		Connection().
+		Model(&community).
+		Updates(models.Community{Title: dto.Title, Description: &dto.Description})
 
 	return nil
 }
