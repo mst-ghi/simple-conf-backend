@@ -14,7 +14,6 @@ func Serve() {
 	core.Initialize()
 
 	engine.Initialize()
-	engine.RegisterMiddlewares()
 	engine.RegisterRoutes()
 	engine.Serve()
 }

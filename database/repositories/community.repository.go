@@ -60,7 +60,8 @@ func (repo *CommunityRepository) FindByIDAndOwnerID(id, ownerId string) models.C
 	var community models.Community
 
 	repo.DB.
-		Where("id = ?", id).Where("owner_id = ?", ownerId).
+		Where("id = ?", id).
+		Where("owner_id = ?", ownerId).
 		Preload("Owner", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select("id", "email", "name")
 		}).
@@ -84,6 +85,7 @@ func (repo *CommunityRepository) FindAll() []models.Community {
 		Preload("Users", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select("id", "email", "name")
 		}).
+		Order("created_at desc").
 		Find(&communities)
 
 	return communities

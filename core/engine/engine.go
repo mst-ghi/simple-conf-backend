@@ -21,8 +21,11 @@ func Initialize() {
 
 	engine = gin.Default()
 	engine.SetTrustedProxies(nil)
+	engine.RedirectTrailingSlash = true
+	engine.RedirectFixedPath = true
 
 	engine.Use(gin.CustomRecovery(handlers.InternalErrorHandler))
+	engine.Use(middlewares.Cors())
 }
 
 func Serve(addr ...string) {
@@ -41,8 +44,4 @@ func RegisterRoutes() {
 	app.RegisterRoutes(routerGroup)
 
 	swagger.RegisterSwagger(routerGroup)
-}
-
-func RegisterMiddlewares() {
-	engine.Use(middlewares.Cors())
 }

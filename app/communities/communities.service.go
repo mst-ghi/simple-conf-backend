@@ -62,7 +62,7 @@ func (service *CommunitiesService) Create(ownerId string, dto CreateDto) models.
 func (service *CommunitiesService) Update(ownerId, id string, dto UpdateDto) core.Error {
 	community := service.repository.FindByIDAndOwnerID(id, ownerId)
 
-	if community.ID != "" {
+	if community.ID == "" {
 		return core.Error{"reason": "Community not found"}
 	}
 

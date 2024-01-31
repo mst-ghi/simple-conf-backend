@@ -12,16 +12,16 @@ func RegisterRoutes(router *gin.RouterGroup) {
 	guestGroup := router.Group("/communities")
 	{
 		guestGroup.GET("", ctrl.FindAll)
-		guestGroup.GET("/:id", ctrl.FindOne)
+		guestGroup.GET("/:id/show", ctrl.FindOne)
 	}
 
 	authGroup := router.Group("/communities").Use(middlewares.Auth)
 	{
-		authGroup.POST("/", ctrl.Create)
-		authGroup.PUT("/:id", ctrl.Update)
-		authGroup.PUT("/:id/join", ctrl.Join)
-		authGroup.PUT("/:id/left", ctrl.Left)
+		authGroup.POST("", ctrl.Create)
 		authGroup.GET("/own", ctrl.OwnerCommunities)
 		authGroup.GET("/joined", ctrl.JoinedCommunities)
+		authGroup.PUT("/:id/update", ctrl.Update)
+		authGroup.PUT("/:id/join", ctrl.Join)
+		authGroup.PUT("/:id/left", ctrl.Left)
 	}
 }
