@@ -103,6 +103,7 @@ func (repo *CommunityRepository) OwnerCommunities(ownerId string) []models.Commu
 		Preload("Users", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select("id", "email", "name")
 		}).
+		Order("created_at desc").
 		Find(&communities)
 
 	return communities
