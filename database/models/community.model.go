@@ -19,8 +19,9 @@ type Community struct {
 	Description *string `gorm:"type:varchar(255);default:null"`
 	Status      string  `gorm:"type:varchar(40);default:active"`
 
-	Owner User   `gorm:"foreignkey:OwnerID"`
-	Users []User `gorm:"many2many:community_users;"`
+	Owner User    `gorm:"foreignkey:OwnerID"`
+	Users []User  `gorm:"many2many:community_users;"`
+	Event []Event `gorm:"foreignKey:CommunityID"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
