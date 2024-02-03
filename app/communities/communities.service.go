@@ -68,7 +68,8 @@ func (service *CommunitiesService) Update(ownerId, id string, dto UpdateDto) cor
 
 	service.repository.
 		Connection().
-		Model(&community).
+		Table("communities").
+		Where("id = ?", community.ID).
 		Updates(models.Community{Title: dto.Title, Description: &dto.Description})
 
 	return nil

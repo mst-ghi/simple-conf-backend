@@ -1,6 +1,7 @@
 package events
 
 import (
+	"fmt"
 	"video-conf/core"
 
 	"github.com/gin-gonic/gin"
@@ -60,6 +61,7 @@ func (ctrl *EventsController) Create(c *gin.Context) {
 	var dto CreateDto
 
 	if err := c.ShouldBindJSON(&dto); err != nil {
+		fmt.Println(err)
 		ctrl.root.JsonBindError(c, err)
 		return
 	}

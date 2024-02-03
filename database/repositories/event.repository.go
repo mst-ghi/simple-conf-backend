@@ -38,9 +38,7 @@ func (repo *EventRepository) Create(event models.Event) models.Event {
 func (repo *EventRepository) FindByID(id string) models.Event {
 	var event models.Event
 
-	repo.DB.
-		Where("status = ?", models.COMMUNITY_ACTIVE_STATUS).
-		First(&event, "id = ?", id)
+	repo.DB.Preload("Community.Owner").First(&event, "id = ?", id)
 
 	return event
 }
@@ -48,11 +46,13 @@ func (repo *EventRepository) FindByID(id string) models.Event {
 func (repo *EventRepository) FindAll(communityId string) []models.Event {
 	var events []models.Event
 
-	repo.DB.
-		Table("events").
-		Where("community_id = ?", communityId).
-		Order("created_at desc").
-		Find(&events)
+	query := repo.DB.Table("events")
+
+	if(communityId != ""){
+		query = query.Where("community_id = ?", communityId)
+	}
+
+	query.Preload("Community.Owner").Order("created_at desc").Find(&events)
 
 	return events
 }

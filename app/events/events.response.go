@@ -2,21 +2,23 @@ package events
 
 import (
 	"time"
+	"video-conf/app/communities"
 	"video-conf/database/models"
 )
 
 type ResponseType map[string]any
 
 type Event struct {
-	ID          string `json:"id"`
-	CommunityID string `json:"community_id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Duration    uint8  `json:"duration"`
-	Status      string `json:"status"`
-	StartAt     string `json:"start_at"`
-	CreatedAt   string `json:"created_at"`
-	UpdatedAt   string `json:"updated_at"`
+	ID          string                `json:"id"`
+	CommunityID string                `json:"community_id"`
+	Title       string                `json:"title"`
+	Description string                `json:"description"`
+	Duration    uint8                 `json:"duration"`
+	Status      string                `json:"status"`
+	StartAt     string                `json:"start_at"`
+	CreatedAt   string                `json:"created_at"`
+	UpdatedAt   string                `json:"updated_at"`
+	Community   communities.Community `json:"community"`
 }
 
 func EventTransform(event models.Event) Event {
@@ -30,6 +32,7 @@ func EventTransform(event models.Event) Event {
 		StartAt:     event.StartAt.Format(time.RFC3339),
 		CreatedAt:   event.CreatedAt.Format(time.RFC3339),
 		UpdatedAt:   event.UpdatedAt.Format(time.RFC3339),
+		Community:   communities.CommunityTransform(event.Community),
 	}
 }
 

@@ -66,7 +66,8 @@ func (service *EventsService) Update(ownerId, id string, dto UpdateDto) core.Err
 
 	service.repository.
 		Connection().
-		Model(&event).
+		Table("events").
+		Where("id = ?", event.ID).
 		Updates(
 			models.Event{
 				Title:       dto.Title,
