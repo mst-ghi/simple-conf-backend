@@ -17,6 +17,8 @@ func Cors() gin.HandlerFunc {
 			return
 		}
 
+		c.Request.Header.Del("Origin")
+
 		c.Next()
 	}
 }

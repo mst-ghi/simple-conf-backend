@@ -48,7 +48,7 @@ func (repo *EventRepository) FindAll(communityId string) []models.Event {
 
 	query := repo.DB.Table("events")
 
-	if(communityId != ""){
+	if communityId != "" {
 		query = query.Where("community_id = ?", communityId)
 	}
 
