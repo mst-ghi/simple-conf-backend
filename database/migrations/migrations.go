@@ -19,6 +19,8 @@ func Migrate() {
 		&models.Token{},
 		&models.Community{},
 		&models.Event{},
+		&models.Room{},
+		&models.RoomUser{},
 	)
 
 	if err != nil {

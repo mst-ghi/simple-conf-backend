@@ -20,12 +20,11 @@ type Event struct {
 	Description string `gorm:"type:varchar(255);not null"`
 	Duration    uint8  `gorm:"type:SMALLINT UNSIGNED;size:240;not null"`
 	Status      string `gorm:"type:varchar(40);default:pending"`
+	StartAt     time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 
 	Community Community `gorm:"foreignkey:CommunityID"`
-
-	StartAt   time.Time
-	CreatedAt time.Time
-	UpdatedAt time.Time
 }
 
 func (t *Event) BeforeCreate(tx *gorm.DB) (err error) {

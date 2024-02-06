@@ -9,16 +9,15 @@ import (
 )
 
 type User struct {
-	ID string `gorm:"type:varchar(40);primarykey"`
-
-	Name     string `gorm:"type:varchar(191);not null"`
-	Email    string `gorm:"type:varchar(191);unique;not null"`
-	Password string `gorm:"type:varchar(100);not null"`
-
-	Communities []Community `gorm:"many2many:community_users;"`
-
+	ID        string `gorm:"type:varchar(40);primarykey"`
+	Name      string `gorm:"type:varchar(191);not null"`
+	Email     string `gorm:"type:varchar(191);unique;not null"`
+	Password  string `gorm:"type:varchar(100);not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
+
+	Communities []Community `gorm:"many2many:community_users"`
+	Rooms       []Room      `gorm:"many2many:room_users"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {

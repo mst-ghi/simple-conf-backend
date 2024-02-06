@@ -178,6 +178,24 @@ definitions:
       message:
         type: string
     type: object
+  core.Response-rooms_RoomResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/rooms.RoomResponseType'
+      errors:
+        type: object
+      message:
+        type: string
+    type: object
+  core.Response-rooms_RoomsResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/rooms.RoomsResponseType'
+      errors:
+        type: object
+      message:
+        type: string
+    type: object
   core.Response-users_UserResponseType:
     properties:
       data:
@@ -215,7 +233,7 @@ definitions:
         type: string
       duration:
         maximum: 250
-        minimum: 1
+        minimum: 0
         type: integer
       start_at:
         type: string
@@ -235,6 +253,8 @@ definitions:
     type: object
   events.Event:
     properties:
+      community:
+        $ref: '#/definitions/communities.Community'
       community_id:
         type: string
       created_at:
@@ -274,7 +294,7 @@ definitions:
         type: string
       duration:
         maximum: 250
-        minimum: 1
+        minimum: 0
         type: integer
       start_at:
         type: string
@@ -289,6 +309,80 @@ definitions:
     - duration
     - start_at
     - status
+    - title
+    type: object
+  rooms.CreateDto:
+    properties:
+      description:
+        maxLength: 250
+        minLength: 2
+        type: string
+      mode:
+        type: string
+      title:
+        maxLength: 190
+        minLength: 2
+        type: string
+      user_ids:
+        items:
+          type: string
+        type: array
+    required:
+    - description
+    - mode
+    - title
+    - user_ids
+    type: object
+  rooms.RoomResponseType:
+    properties:
+      room:
+        $ref: '#/definitions/rooms.RoomUser'
+    type: object
+  rooms.RoomUser:
+    properties:
+      access:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      mode:
+        type: string
+      owner_id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/users.UserShort'
+        type: array
+    type: object
+  rooms.RoomsResponseType:
+    properties:
+      rooms:
+        items:
+          $ref: '#/definitions/rooms.RoomUser'
+        type: array
+    type: object
+  rooms.UpdateDto:
+    properties:
+      description:
+        maxLength: 250
+        minLength: 2
+        type: string
+      mode:
+        type: string
+      title:
+        maxLength: 190
+        minLength: 2
+        type: string
+    required:
+    - description
+    - mode
     - title
     type: object
   users.User:
@@ -699,6 +793,93 @@ paths:
       summary: update event
       tags:
       - Events
+  /api/v1/rooms:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-rooms_RoomsResponseType'
+      security:
+      - Bearer: []
+      summary: get list of rooms
+      tags:
+      - Rooms
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create room inputs
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/rooms.CreateDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-rooms_RoomResponseType'
+      security:
+      - Bearer: []
+      summary: create new room
+      tags:
+      - Rooms
+  /api/v1/rooms/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-rooms_RoomResponseType'
+      security:
+      - Bearer: []
+      summary: get room by id
+      tags:
+      - Rooms
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Room ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update room inputs
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/rooms.UpdateDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: update room
+      tags:
+      - Rooms
   /api/v1/users:
     get:
       consumes:

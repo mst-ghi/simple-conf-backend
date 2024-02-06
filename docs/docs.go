@@ -613,6 +613,148 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/rooms": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "get list of rooms",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response-rooms_RoomsResponseType"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "create new room",
+                "parameters": [
+                    {
+                        "description": "Create room inputs",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rooms.CreateDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response-rooms_RoomResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rooms/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "get room by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Room ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response-rooms_RoomResponseType"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "update room",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Room ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update room inputs",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rooms.UpdateDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/users": {
             "get": {
                 "consumes": [
@@ -930,6 +1072,34 @@ const docTemplate = `{
                 }
             }
         },
+        "core.Response-rooms_RoomResponseType": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/rooms.RoomResponseType"
+                },
+                "errors": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "core.Response-rooms_RoomsResponseType": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/rooms.RoomsResponseType"
+                },
+                "errors": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "core.Response-users_UserResponseType": {
             "type": "object",
             "properties": {
@@ -994,7 +1164,7 @@ const docTemplate = `{
                 "duration": {
                     "type": "integer",
                     "maximum": 250,
-                    "minimum": 1
+                    "minimum": 0
                 },
                 "start_at": {
                     "type": "string"
@@ -1012,6 +1182,9 @@ const docTemplate = `{
         "events.Event": {
             "type": "object",
             "properties": {
+                "community": {
+                    "$ref": "#/definitions/communities.Community"
+                },
                 "community_id": {
                     "type": "string"
                 },
@@ -1078,12 +1251,119 @@ const docTemplate = `{
                 "duration": {
                     "type": "integer",
                     "maximum": 250,
-                    "minimum": 1
+                    "minimum": 0
                 },
                 "start_at": {
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 190,
+                    "minLength": 2
+                }
+            }
+        },
+        "rooms.CreateDto": {
+            "type": "object",
+            "required": [
+                "description",
+                "mode",
+                "title",
+                "user_ids"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 250,
+                    "minLength": 2
+                },
+                "mode": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 190,
+                    "minLength": 2
+                },
+                "user_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "rooms.RoomResponseType": {
+            "type": "object",
+            "properties": {
+                "room": {
+                    "$ref": "#/definitions/rooms.RoomUser"
+                }
+            }
+        },
+        "rooms.RoomUser": {
+            "type": "object",
+            "properties": {
+                "access": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "mode": {
+                    "type": "string"
+                },
+                "owner_id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/users.UserShort"
+                    }
+                }
+            }
+        },
+        "rooms.RoomsResponseType": {
+            "type": "object",
+            "properties": {
+                "rooms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/rooms.RoomUser"
+                    }
+                }
+            }
+        },
+        "rooms.UpdateDto": {
+            "type": "object",
+            "required": [
+                "description",
+                "mode",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 250,
+                    "minLength": 2
+                },
+                "mode": {
                     "type": "string"
                 },
                 "title": {

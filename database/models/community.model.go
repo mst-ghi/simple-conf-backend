@@ -18,13 +18,12 @@ type Community struct {
 	Title       string  `gorm:"type:varchar(191);not null"`
 	Description *string `gorm:"type:varchar(255);default:null"`
 	Status      string  `gorm:"type:varchar(40);default:active"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 
 	Owner User    `gorm:"foreignkey:OwnerID"`
 	Users []User  `gorm:"many2many:community_users;"`
 	Event []Event `gorm:"foreignKey:CommunityID"`
-
-	CreatedAt time.Time
-	UpdatedAt time.Time
 }
 
 type CommunityUser struct {

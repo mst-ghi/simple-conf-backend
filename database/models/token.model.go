@@ -10,19 +10,17 @@ import (
 )
 
 type Token struct {
-	ID           string `gorm:"type:varchar(40);primarykey"`
-	UserID       string `gorm:"type:varchar(40);not null"`
-	AccessToken  string `gorm:"type:varchar(64);unique;not null"`
-	RefreshToken string `gorm:"type:varchar(64);unique;not null"`
-	Invoked      bool   `gorm:"default:false"`
-
-	User User `gorm:"foreignkey:UserID"`
-
+	ID               string    `gorm:"type:varchar(40);primarykey"`
+	UserID           string    `gorm:"type:varchar(40);not null"`
+	AccessToken      string    `gorm:"type:varchar(64);unique;not null"`
+	RefreshToken     string    `gorm:"type:varchar(64);unique;not null"`
+	Invoked          bool      `gorm:"default:false"`
 	AccessExpiresAt  time.Time `gorm:"not null"`
 	RefreshExpiresAt time.Time `gorm:"not null"`
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	User User `gorm:"foreignkey:UserID"`
 }
 
 func (t *Token) BeforeCreate(tx *gorm.DB) (err error) {

@@ -4,6 +4,7 @@ import (
 	"video-conf/app/auth"
 	"video-conf/app/communities"
 	"video-conf/app/events"
+	"video-conf/app/rooms"
 	"video-conf/app/users"
 	"video-conf/core"
 
@@ -29,5 +30,6 @@ func RegisterRoutes(router *gin.RouterGroup) {
 		users.RegisterRoutes(v1Group)
 		communities.RegisterRoutes(v1Group)
 		events.RegisterRoutes(v1Group)
+		rooms.RegisterRoutes(v1Group)
 	}
 }
