@@ -613,6 +613,123 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/messages": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "get list of messages",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Room ID",
+                        "name": "room_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response-messages_MessagesResponseType"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "create new message",
+                "parameters": [
+                    {
+                        "description": "Create message inputs",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/messages.CreateDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response-messages_MessageResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/messages/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "update message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Message ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update message inputs",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/messages.UpdateDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/rooms": {
             "get": {
                 "security": [
@@ -1072,6 +1189,34 @@ const docTemplate = `{
                 }
             }
         },
+        "core.Response-messages_MessageResponseType": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/messages.MessageResponseType"
+                },
+                "errors": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "core.Response-messages_MessagesResponseType": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/messages.MessagesResponseType"
+                },
+                "errors": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "core.Response-rooms_RoomResponseType": {
             "type": "object",
             "properties": {
@@ -1263,6 +1408,84 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 190,
                     "minLength": 2
+                }
+            }
+        },
+        "messages.CreateDto": {
+            "type": "object",
+            "required": [
+                "content",
+                "room_id"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "maxLength": 3000,
+                    "minLength": 1
+                },
+                "room_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "messages.Message": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "room_id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/users.UserShort"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "messages.MessageResponseType": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "$ref": "#/definitions/messages.Message"
+                }
+            }
+        },
+        "messages.MessagesResponseType": {
+            "type": "object",
+            "properties": {
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/messages.Message"
+                    }
+                }
+            }
+        },
+        "messages.UpdateDto": {
+            "type": "object",
+            "required": [
+                "content"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "maxLength": 3000,
+                    "minLength": 1
                 }
             }
         },

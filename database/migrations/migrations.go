@@ -21,6 +21,7 @@ func Migrate() {
 		&models.Event{},
 		&models.Room{},
 		&models.RoomUser{},
+		&models.Message{},
 	)
 
 	if err != nil {

@@ -23,8 +23,9 @@ type Room struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 
-	Owner User   `gorm:"foreignkey:OwnerID"`
-	Users []User `gorm:"many2many:room_users"`
+	Owner    User   `gorm:"foreignkey:OwnerID"`
+	Users    []User `gorm:"many2many:room_users"`
+	Messages []Message
 }
 
 type RoomUser struct {

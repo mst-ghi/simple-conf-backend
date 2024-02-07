@@ -178,6 +178,24 @@ definitions:
       message:
         type: string
     type: object
+  core.Response-messages_MessageResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/messages.MessageResponseType'
+      errors:
+        type: object
+      message:
+        type: string
+    type: object
+  core.Response-messages_MessagesResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/messages.MessagesResponseType'
+      errors:
+        type: object
+      message:
+        type: string
+    type: object
   core.Response-rooms_RoomResponseType:
     properties:
       data:
@@ -310,6 +328,58 @@ definitions:
     - start_at
     - status
     - title
+    type: object
+  messages.CreateDto:
+    properties:
+      content:
+        maxLength: 3000
+        minLength: 1
+        type: string
+      room_id:
+        type: string
+    required:
+    - content
+    - room_id
+    type: object
+  messages.Message:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      room_id:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/users.UserShort'
+      user_id:
+        type: string
+    type: object
+  messages.MessageResponseType:
+    properties:
+      message:
+        $ref: '#/definitions/messages.Message'
+    type: object
+  messages.MessagesResponseType:
+    properties:
+      messages:
+        items:
+          $ref: '#/definitions/messages.Message'
+        type: array
+    type: object
+  messages.UpdateDto:
+    properties:
+      content:
+        maxLength: 3000
+        minLength: 1
+        type: string
+    required:
+    - content
     type: object
   rooms.CreateDto:
     properties:
@@ -793,6 +863,78 @@ paths:
       summary: update event
       tags:
       - Events
+  /api/v1/messages:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Room ID
+        in: query
+        name: room_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-messages_MessagesResponseType'
+      security:
+      - Bearer: []
+      summary: get list of messages
+      tags:
+      - Messages
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create message inputs
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/messages.CreateDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-messages_MessageResponseType'
+      security:
+      - Bearer: []
+      summary: create new message
+      tags:
+      - Messages
+  /api/v1/messages/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Message ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update message inputs
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/messages.UpdateDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: update message
+      tags:
+      - Messages
   /api/v1/rooms:
     get:
       consumes:
