@@ -46,7 +46,9 @@ func (repo *RoomRepository) Create(room models.Room, userIDs []string) (models.R
 			Where("user_id = ? AND access = ?", userIDs[0], models.ROOM_ACCESS_MEMBER).
 			First(&existRoomUser)
 
-		return existRoomUser, nil
+		if existRoomUser.RoomID != "" {
+			return existRoomUser, nil
+		}
 	}
 
 	var newRoom models.Room

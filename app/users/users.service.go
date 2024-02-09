@@ -7,7 +7,7 @@ import (
 )
 
 type UsersServiceInterface interface {
-	FindAll() []models.User
+	FindAll(exceptUserId string) []models.User
 	FindOne(id string) (models.User, core.Error)
 }
 
@@ -21,8 +21,8 @@ func NewUsersService() *UsersService {
 	}
 }
 
-func (service *UsersService) FindAll() []models.User {
-	return service.repository.FindAll()
+func (service *UsersService) FindAll(exceptUserId string) []models.User {
+	return service.repository.FindAll(exceptUserId)
 }
 
 func (service *UsersService) FindOne(id string) (models.User, core.Error) {

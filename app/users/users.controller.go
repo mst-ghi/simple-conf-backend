@@ -18,24 +18,27 @@ func NewUsersController() *UsersController {
 	}
 }
 
-// @tags    Users
-// @router  /api/v1/users [get]
-// @summary get list of users
-// @accept  json
-// @produce json
-// @success 200 {object} core.Response[UsersResponseType]
+// @tags     Users
+// @security Bearer
+// @router   /api/v1/users [get]
+// @summary  get list of users
+// @accept   json
+// @produce  json
+// @success  200 {object} core.Response[UsersResponseType]
 func (ctrl *UsersController) FindAll(c *gin.Context) {
-	users := ctrl.service.FindAll()
+	user := core.User(c)
+	users := ctrl.service.FindAll(user.ID)
 	ctrl.root.Success(c, UsersResponse(users))
 }
 
-// @tags    Users
-// @router  /api/v1/users/{id} [get]
-// @summary get user by id
-// @accept  json
-// @produce json
-// @success 200 {object} core.Response[UserResponseType]
-// @param   id path string true "User ID"
+// @tags     Users
+// @security Bearer
+// @router   /api/v1/users/{id} [get]
+// @summary  get user by id
+// @accept   json
+// @produce  json
+// @success  200 {object} core.Response[UserResponseType]
+// @param    id path string true "User ID"
 func (ctrl *UsersController) FindOne(c *gin.Context) {
 	user, err := ctrl.service.FindOne(c.Param("id"))
 

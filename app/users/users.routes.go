@@ -1,13 +1,17 @@
 package users
 
-import "github.com/gin-gonic/gin"
+import (
+	"video-conf/core/middlewares"
+
+	"github.com/gin-gonic/gin"
+)
 
 func RegisterRoutes(router *gin.RouterGroup) {
 	ctrl := NewUsersController()
 
-	guestGroup := router.Group("/users")
+	authGroup := router.Group("/users").Use(middlewares.Auth)
 	{
-		guestGroup.GET("", ctrl.FindAll)
-		guestGroup.GET("/:id", ctrl.FindOne)
+		authGroup.GET("", ctrl.FindAll)
+		authGroup.GET("/:id", ctrl.FindOne)
 	}
 }

@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"fmt"
 	"video-conf/database"
 	"video-conf/database/models"
 
@@ -12,7 +13,7 @@ type UserRepositoryInterface interface {
 	Create(user models.User) models.User
 	FindByEmail(email string) models.User
 	FindByID(id string) models.User
-	FindAll() []models.User
+	FindAll(exceptUserId string) []models.User
 }
 
 type UserRepository struct {
@@ -47,8 +48,9 @@ func (repo *UserRepository) FindByID(id string) models.User {
 	return user
 }
 
-func (repo *UserRepository) FindAll() []models.User {
+func (repo *UserRepository) FindAll(exceptUserId string) []models.User {
+	fmt.Println("exceptUserId", exceptUserId)
 	var users []models.User
-	repo.DB.Table("users").Find(&users)
+	repo.DB.Table("users").Not("id = ?", exceptUserId).Find(&users)
 	return users
 }
