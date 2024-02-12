@@ -117,7 +117,7 @@ func (repo *RoomRepository) FindRoomUserByID(id, userId string) models.RoomUser 
 func (repo *RoomRepository) FindAll(userID string) []models.RoomUser {
 	var rooms []models.RoomUser
 
-	repo.DB.Table("room_users").Where("user_id = ?", userID).Preload("Room").Find(&rooms)
+	repo.DB.Table("room_users").Where("user_id = ?", userID).Preload("Room.Users").Find(&rooms)
 
 	return rooms
 }
