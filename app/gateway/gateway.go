@@ -1,4 +1,4 @@
-package socket
+package gateway
 
 import (
 	"log"
@@ -19,13 +19,14 @@ func Initialize() {
 		SessionIDGenerator: &CuidGenerator{},
 	})
 
-	InitBaseHandlers()
+	BaseHandlers()
+	ModuleHandlers()
 }
 
 func Serve(engine *gin.Engine) {
 	go func() {
 		if err := socket.Serve(); err != nil {
-			log.Fatalf("socketio listen error: %s\n", err)
+			log.Fatalf("SocketIO listen error: %s\n", err)
 		}
 	}()
 

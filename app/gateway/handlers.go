@@ -1,15 +1,22 @@
-package socket
+package gateway
 
 import (
 	"log"
+	"strings"
 	"video-conf/database/repositories"
 
 	socketio "github.com/googollee/go-socket.io"
 )
 
-func InitBaseHandlers() {
+func ModuleHandlers() {
+	socket.OnEvent("/", EVENT_USER_GET, func(s socketio.Conn) {
+		s.Emit(EVENT_USER_ME, SuccessResponse(s.Context()))
+	})
+}
+
+func BaseHandlers() {
 	socket.OnConnect("/", func(s socketio.Conn) error {
-		log.Println("client connected by ID:", s.ID())
+		log.Println("Socket connected by ID:", s.ID())
 
 		// join client to general room
 		s.Join(SOCKET_GENERAL_ROOM)
@@ -37,10 +44,20 @@ func InitBaseHandlers() {
 	})
 
 	socket.OnDisconnect("/", func(s socketio.Conn, msg string) {
-		log.Println("client disconnected by ID:", msg)
+		log.Println("Socket disconnected by ID:", msg)
 	})
+}
 
-	socket.OnEvent("/", EVENT_USER_GET, func(s socketio.Conn) {
-		s.Emit(EVENT_USER_ME, SuccessResponse(s.Context()))
-	})
+func getUserTkn(query string) string {
+	tkn := strings.Split(query, "&")
+
+	if tkn[0] != "" {
+		for i := 0; i < len(tkn); i++ {
+			if strings.Contains(tkn[i], "tkn=") {
+				return strings.Split(tkn[i], "=")[1]
+			}
+		}
+	}
+
+	return ""
 }

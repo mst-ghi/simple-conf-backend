@@ -1,10 +1,10 @@
 package bootstrap
 
 import (
+	"video-conf/app/gateway"
 	"video-conf/core"
 	"video-conf/core/config"
 	"video-conf/core/engine"
-	"video-conf/core/socket"
 	"video-conf/database"
 )
 
@@ -17,9 +17,9 @@ func Serve() {
 	engine.Initialize()
 	engine.RegisterRoutes()
 
-	socket.Initialize()
-	socket.Serve(engine.GetEngine())
+	gateway.Initialize()
+	gateway.Serve(engine.GetEngine())
 
-	defer socket.GetSocket().Close()
+	defer gateway.GetSocket().Close()
 	engine.Serve()
 }

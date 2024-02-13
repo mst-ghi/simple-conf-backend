@@ -1,4 +1,4 @@
-package socket
+package gateway
 
 import "net/http"
 
@@ -24,24 +24,7 @@ const (
 	EVENT_ROOM_UPDATE = "room:update"
 	EVENT_ROOM_DELETE = "room:delete"
 
-	EVENT_MESSAGE_NEW    = "message:new"
+	EVENT_MESSAGE_SEND   = "message:send"
 	EVENT_MESSAGE_UPDATE = "message:update"
 	EVENT_MESSAGE_DELETE = "message:delete"
 )
-
-type SocketUser struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
-
-type SocketContext struct {
-	User SocketUser `json:"user"`
-}
-
-type SocketData struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Errors  interface{} `json:"errors"`
-	Data    interface{} `json:"data"`
-}

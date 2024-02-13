@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @tags App
+// @tags    App
 // @router	/api [get]
 // @summary	app route, get heathy status
 func HomeRoute(c *gin.Context) {

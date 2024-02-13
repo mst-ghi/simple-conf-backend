@@ -1,4 +1,4 @@
-package socket
+package gateway
 
 import (
 	"encoding/json"
@@ -24,8 +24,6 @@ func SuccessResponse(data interface{}) SocketData {
 		Errors:  struct{}{},
 		Data:    data,
 	}
-
-	// return ResponseSocketData(sData)
 }
 
 func ErrorResponse(code int, errors interface{}, data interface{}) SocketData {
@@ -35,8 +33,6 @@ func ErrorResponse(code int, errors interface{}, data interface{}) SocketData {
 		Errors:  errors,
 		Data:    data,
 	}
-
-	// return ResponseSocketData(sData)
 }
 
 func BroadcastToGeneral(event string, data SocketData) {
