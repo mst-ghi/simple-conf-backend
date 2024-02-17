@@ -90,7 +90,7 @@ func (service *CommunitiesService) Join(communityId, userId string) core.Error {
 func (service *CommunitiesService) Left(communityId, userId string) core.Error {
 	community := service.repository.FindOneCommunityUser(communityId, userId)
 
-	if community.CommunityID != "" {
+	if community.CommunityID == "" {
 		return core.Error{"reason": "You are not a member of the community"}
 	}
 
