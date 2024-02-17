@@ -17,6 +17,9 @@ const (
 )
 
 const (
+	EVENT_ERROR_UNAUTHORIZED = "errors:unauthorized"
+	EVENT_ERROR_MESSAGE      = "errors:message"
+
 	EVENT_USER_ME  = "user:me"
 	EVENT_USER_GET = "user:get"
 
@@ -25,6 +28,7 @@ const (
 	EVENT_ROOM_DELETE = "room:delete"
 
 	EVENT_MESSAGE_SEND   = "message:send"
+	EVENT_MESSAGE_NEW    = "message:new"
 	EVENT_MESSAGE_UPDATE = "message:update"
 	EVENT_MESSAGE_DELETE = "message:delete"
 )

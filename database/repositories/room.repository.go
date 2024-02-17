@@ -14,6 +14,7 @@ type RoomRepositoryInterface interface {
 	FindRoomByID(id, ownerID string) models.Room
 	FindRoomUserByID(id, userId string) models.RoomUser
 	FindAll(userID string) []models.RoomUser
+	FindIds(userID string) []string
 	Delete(roomId string)
 }
 
@@ -120,6 +121,14 @@ func (repo *RoomRepository) FindAll(userID string) []models.RoomUser {
 	repo.DB.Table("room_users").Where("user_id = ?", userID).Preload("Room.Users").Find(&rooms)
 
 	return rooms
+}
+
+func (repo *RoomRepository) FindIds(userID string) []string {
+	var ids []string
+
+	repo.DB.Table("room_users").Select("room_id").Where("user_id = ?", userID).Find(&ids)
+
+	return ids
 }
 
 func (repo *RoomRepository) Delete(roomId string) {

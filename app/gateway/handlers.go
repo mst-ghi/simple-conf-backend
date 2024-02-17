@@ -1,63 +1,44 @@
 package gateway
 
 import (
-	"log"
-	"strings"
-	"video-conf/database/repositories"
+	"video-conf/app/messages"
 
 	socketio "github.com/googollee/go-socket.io"
 )
 
 func ModuleHandlers() {
-	socket.OnEvent("/", EVENT_USER_GET, func(s socketio.Conn) {
-		s.Emit(EVENT_USER_ME, SuccessResponse(s.Context()))
-	})
-}
+	messageGateway := messages.NewMessagesGateway()
 
-func BaseHandlers() {
-	socket.OnConnect("/", func(s socketio.Conn) error {
-		log.Println("Socket connected by ID:", s.ID())
+	socket.OnEvent("/", EVENT_USER_GET, func(con socketio.Conn) {
+		ctx, ok := CheckContext(con)
 
-		// join client to general room
-		s.Join(SOCKET_GENERAL_ROOM)
-
-		accessToken := getUserTkn(s.URL().RawQuery)
-
-		if accessToken != "" {
-			tokenRepo := repositories.NewTokenRepository()
-			token := tokenRepo.FindByAccess(accessToken)
-
-			s.SetContext(SocketContext{
-				User: SocketUser{
-					ID:    token.User.ID,
-					Name:  token.User.Name,
-					Email: token.User.Email,
-				},
-			})
+		if ok {
+			SuccessEmitTo(con, EVENT_USER_ME, ctx)
 		}
 
-		return nil
 	})
 
-	socket.OnError("/", func(s socketio.Conn, e error) {
-		log.Println("Socket OnError:", e.Error())
-	})
+	socket.OnEvent("/", EVENT_MESSAGE_SEND, func(con socketio.Conn, data map[string]string) {
+		ctx, ok := CheckContext(con)
 
-	socket.OnDisconnect("/", func(s socketio.Conn, msg string) {
-		log.Println("Socket disconnected by ID:", msg)
-	})
-}
+		if ok {
+			message, err := messageGateway.NewMessage(
+				messages.NewMessageData{
+					UserId:  ctx.User.ID,
+					RoomId:  data["RoomId"],
+					Content: data["Content"],
+				},
+			)
 
-func getUserTkn(query string) string {
-	tkn := strings.Split(query, "&")
-
-	if tkn[0] != "" {
-		for i := 0; i < len(tkn); i++ {
-			if strings.Contains(tkn[i], "tkn=") {
-				return strings.Split(tkn[i], "=")[1]
+			if err != nil {
+				ErrorEmitTo(con, EVENT_ERROR_MESSAGE, SOCKET_STATUS_BAD_REQUEST, struct{}{})
+			} else {
+				BroadcastToRoom(
+					message.RoomID,
+					EVENT_MESSAGE_NEW,
+					map[string]any{"message": messages.MessageTransform(message)},
+				)
 			}
 		}
-	}
-
-	return ""
+	})
 }
