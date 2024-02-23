@@ -41,4 +41,16 @@ func ModuleHandlers() {
 			}
 		}
 	})
+
+	socket.OnEvent("/", EVENT_CALL_CALLING, func(con socketio.Conn, data map[string]any) {
+		_, ok := CheckContext(con)
+
+		if ok {
+			BroadcastToRoom(
+				data["roomId"].(string),
+				EVENT_CALL_RECEIVING,
+				data,
+			)
+		}
+	})
 }

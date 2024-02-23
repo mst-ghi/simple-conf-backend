@@ -59,6 +59,9 @@ func BaseHandlers() {
 				},
 			})
 
+			// join client to userID room
+			con.Join(token.User.ID)
+
 			// join client to general room
 			con.Join(SOCKET_GENERAL_ROOM)
 

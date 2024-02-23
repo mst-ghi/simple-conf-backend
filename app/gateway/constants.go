@@ -31,4 +31,8 @@ const (
 	EVENT_MESSAGE_NEW    = "message:new"
 	EVENT_MESSAGE_UPDATE = "message:update"
 	EVENT_MESSAGE_DELETE = "message:delete"
+
+	EVENT_CALL_CALLING   = "call:calling"
+	EVENT_CALL_RECEIVING = "call:receiving"
+	EVENT_CALL_ACCEPTED  = "call:accepted"
 )
