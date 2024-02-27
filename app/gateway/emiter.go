@@ -4,7 +4,6 @@ import socketio "github.com/googollee/go-socket.io"
 
 func successResponse(event string, data interface{}) SocketData {
 	return SocketData{
-		Code:    SOCKET_STATUS_OK,
 		Event:   event,
 		Message: "Successful processing",
 		Errors:  struct{}{},
@@ -12,9 +11,8 @@ func successResponse(event string, data interface{}) SocketData {
 	}
 }
 
-func errorResponse(event string, code int, errors interface{}) SocketData {
+func errorResponse(event string, errors interface{}) SocketData {
 	return SocketData{
-		Code:    code,
 		Event:   event,
 		Message: "Error in processing",
 		Errors:  errors,
@@ -34,6 +32,6 @@ func SuccessEmitTo(s socketio.Conn, event string, data interface{}) {
 	s.Emit(event, successResponse(event, data))
 }
 
-func ErrorEmitTo(s socketio.Conn, event string, code int, errors interface{}) {
-	s.Emit(event, errorResponse(event, code, errors))
+func ErrorEmitTo(s socketio.Conn, event string, errors interface{}) {
+	s.Emit(event, errorResponse(event, errors))
 }

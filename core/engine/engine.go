@@ -24,8 +24,8 @@ func Initialize() {
 	engine.RedirectTrailingSlash = true
 	engine.RedirectFixedPath = true
 
-	engine.Use(gin.CustomRecovery(handlers.InternalErrorHandler))
 	engine.Use(middlewares.Cors())
+	engine.Use(gin.CustomRecovery(handlers.InternalErrorHandler))
 }
 
 func Serve(addr ...string) {

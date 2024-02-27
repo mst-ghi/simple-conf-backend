@@ -86,7 +86,7 @@ func CheckContext(s socketio.Conn) (SocketContext, bool) {
 	var ctx, ok = s.Context().(SocketContext)
 
 	if !ok {
-		ErrorEmitTo(s, EVENT_ERROR_UNAUTHORIZED, SOCKET_STATUS_UNAUTHORIZED, struct{}{})
+		ErrorEmitTo(s, EVENT_ERROR_UNAUTHORIZED, struct{}{})
 		return ctx, false
 	}
 

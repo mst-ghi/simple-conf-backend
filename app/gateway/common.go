@@ -23,7 +23,6 @@ type SocketContext struct {
 }
 
 type SocketData struct {
-	Code    int         `json:"code"`
 	Event   string      `json:"event"`
 	Message string      `json:"message"`
 	Errors  interface{} `json:"errors"`

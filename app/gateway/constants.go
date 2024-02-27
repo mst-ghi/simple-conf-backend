@@ -1,17 +1,5 @@
 package gateway
 
-import "net/http"
-
-const (
-	SOCKET_STATUS_OK             = http.StatusOK
-	SOCKET_STATUS_BAD_REQUEST    = http.StatusBadRequest
-	SOCKET_STATUS_UNAUTHORIZED   = http.StatusUnauthorized
-	SOCKET_STATUS_FORBIDDEN      = http.StatusForbidden
-	SOCKET_STATUS_NOTFOUND       = http.StatusNotFound
-	SOCKET_STATUS_UNPROCESSABLE  = http.StatusUnprocessableEntity
-	SOCKET_STATUS_INTERNAL_ERROR = http.StatusInternalServerError
-)
-
 const (
 	SOCKET_GENERAL_ROOM = "general"
 )
@@ -34,5 +22,8 @@ const (
 
 	EVENT_CALL_CALLING   = "call:calling"
 	EVENT_CALL_RECEIVING = "call:receiving"
+	EVENT_CALL_ACCEPTING = "call:accepting"
 	EVENT_CALL_ACCEPTED  = "call:accepted"
+	EVENT_CALL_ENDING    = "call:ending"
+	EVENT_CALL_ENDED     = "call:ended"
 )
