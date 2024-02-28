@@ -26,4 +26,5 @@ const (
 	EVENT_CALL_ACCEPTED  = "call:accepted"
 	EVENT_CALL_ENDING    = "call:ending"
 	EVENT_CALL_ENDED     = "call:ended"
+	EVENT_CALL_BUSY      = "call:busy"
 )
