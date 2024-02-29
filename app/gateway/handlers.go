@@ -46,11 +46,22 @@ func ModuleHandlers() {
 		_, ok := CheckContext(con)
 
 		if ok {
-			BroadcastToRoom(
-				data["toRoomId"].(string),
-				EVENT_CALL_RECEIVING,
-				data,
-			)
+			userStatus := socket.RoomLen("/", data["toRoomId"].(string))
+
+			if userStatus > 0 {
+				BroadcastToRoom(
+					data["toRoomId"].(string),
+					EVENT_CALL_RECEIVING,
+					data,
+				)
+			} else {
+				BroadcastToRoom(
+					data["fromRoomId"].(string),
+					EVENT_CALL_OFFLINE,
+					data,
+				)
+			}
+
 		}
 	})
 
