@@ -1,8 +1,12 @@
 <!-- @format -->
 
-# Gin Blog Project
+# Video Conf Backend Project
 
-Simple blog project with Golang and Gin framework.
+A simple project for communities. This project contain **Communities**, **Events**, **Chat**, **Video Chat** and etc. <br/>
+
+[Frontend Source Code](https://github.com/mst-ghi/video-conf-frontend)
+<br />
+**Development is ongoing...**
 
 ## Technical Features
 
@@ -12,9 +16,9 @@ Simple blog project with Golang and Gin framework.
 -   Custom JWT authentication
 -   Custom commands
 -   Middlewares
--   Faker data
 -   Base response contract
--   Modular
+-   SocketIO
+-   Chat & Video Call
 
 ## Clone and Run
 
@@ -57,6 +61,19 @@ _Swagger document is available on :_ **/api/docs/index.html**
 │   │   ├── events.response.go
 │   │   ├── events.routes.go
 │   │   └── events.service.go
+│   ├── gateway
+│   │   ├── common.go
+│   │   ├── constants.go
+│   │   ├── emitter.go
+│   │   ├── gateway.go
+│   │   └── handlers.go
+│   ├── messages
+│   │   ├── messages.controller.go
+│   │   ├── messages.dto.go
+│   │   ├── messages.gateway.go
+│   │   ├── messages.response.go
+│   │   ├── messages.routes.go
+│   │   └── messages.service.go
 │   ├── rooms
 │   │   ├── events.controller.go
 │   │   ├── events.routes.go
@@ -68,7 +85,6 @@ _Swagger document is available on :_ **/api/docs/index.html**
 │   │   ├── users.response.go
 │   │   ├── users.routes.go
 │   │   └── users.service.go
-│   ├── gateway.go
 │   └── routing.go
 ├── core
 │   ├── bootstrap
@@ -86,13 +102,6 @@ _Swagger document is available on :_ **/api/docs/index.html**
 │   ├── middlewares
 │   │   ├── cors.go
 │   │   └── jwt.go
-│   ├── socket
-│   │   ├── constants.go
-│   │   ├── emiter.go
-│   │   ├── generator.go
-│   │   ├── handlers.go
-│   │   ├── middleware.go
-│   │   └── socket.go
 │   ├── swagger
 │   │   └── swagger.go
 │   ├── kernel.go
@@ -103,12 +112,14 @@ _Swagger document is available on :_ **/api/docs/index.html**
 │   ├── models
 │   │   ├── community.model.go
 │   │   ├── event.model.go
+│   │   ├── message.model.go
 │   │   ├── room.model.go
 │   │   ├── token.model.go
 │   │   └── user.model.go
 │   ├── repositories
 │   │   ├── community.repository.go
 │   │   ├── event.repository.go
+│   │   ├── message.repository.go
 │   │   ├── room.repository.go
 │   │   ├── token.repository.go
 │   │   └── user.repository.go
