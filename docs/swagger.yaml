@@ -70,6 +70,15 @@ definitions:
       tokens:
         $ref: '#/definitions/auth.Tokens'
     type: object
+  communities.CommunitiesMetaResponseType:
+    properties:
+      communities:
+        items:
+          $ref: '#/definitions/communities.Community'
+        type: array
+      meta:
+        $ref: '#/definitions/scopes.PaginateMetadata'
+    type: object
   communities.CommunitiesResponseType:
     properties:
       communities:
@@ -142,6 +151,15 @@ definitions:
       message:
         type: string
     type: object
+  core.Response-communities_CommunitiesMetaResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/communities.CommunitiesMetaResponseType'
+      errors:
+        type: object
+      message:
+        type: string
+    type: object
   core.Response-communities_CommunitiesResponseType:
     properties:
       data:
@@ -169,10 +187,10 @@ definitions:
       message:
         type: string
     type: object
-  core.Response-events_EventsResponseType:
+  core.Response-events_EventsMetaResponseType:
     properties:
       data:
-        $ref: '#/definitions/events.EventsResponseType'
+        $ref: '#/definitions/events.EventsMetaResponseType'
       errors:
         type: object
       message:
@@ -297,12 +315,14 @@ definitions:
       event:
         $ref: '#/definitions/events.Event'
     type: object
-  events.EventsResponseType:
+  events.EventsMetaResponseType:
     properties:
       events:
         items:
           $ref: '#/definitions/events.Event'
         type: array
+      meta:
+        $ref: '#/definitions/scopes.PaginateMetadata'
     type: object
   events.UpdateDto:
     properties:
@@ -454,6 +474,17 @@ definitions:
     - description
     - mode
     - title
+    type: object
+  scopes.PaginateMetadata:
+    properties:
+      page:
+        type: integer
+      take:
+        type: integer
+      total_pages:
+        type: integer
+      total_rows:
+        type: integer
     type: object
   users.User:
     properties:
@@ -620,13 +651,26 @@ paths:
     get:
       consumes:
       - application/json
+      parameters:
+      - description: search value
+        in: query
+        name: search
+        type: string
+      - description: pagination page_value, default 1
+        in: query
+        name: page
+        type: string
+      - description: pagination take_value, default 20
+        in: query
+        name: take
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/core.Response-communities_CommunitiesResponseType'
+            $ref: '#/definitions/core.Response-communities_CommunitiesMetaResponseType'
       summary: get list of communities
       tags:
       - Communities
@@ -784,13 +828,25 @@ paths:
         in: query
         name: community_id
         type: string
+      - description: search value
+        in: query
+        name: search
+        type: string
+      - description: pagination page_value, default 1
+        in: query
+        name: page
+        type: string
+      - description: pagination take_value, default 20
+        in: query
+        name: take
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/core.Response-events_EventsResponseType'
+            $ref: '#/definitions/core.Response-events_EventsMetaResponseType'
       summary: get list of events
       tags:
       - Events
@@ -1033,6 +1089,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/core.Response-users_UsersResponseType'
+      security:
+      - Bearer: []
       summary: get list of users
       tags:
       - Users
@@ -1053,6 +1111,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/core.Response-users_UserResponseType'
+      security:
+      - Bearer: []
       summary: get user by id
       tags:
       - Users

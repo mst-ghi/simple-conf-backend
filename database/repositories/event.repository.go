@@ -3,6 +3,7 @@ package repositories
 import (
 	"video-conf/database"
 	"video-conf/database/models"
+	"video-conf/database/scopes"
 
 	"gorm.io/gorm"
 )
@@ -11,7 +12,7 @@ type EventRepositoryInterface interface {
 	Connection() *gorm.DB
 	Create(event models.Event) models.Event
 	FindByID(id string) models.Event
-	FindAll(eventId string) []models.Event
+	FindAll(communityId, search string, page, take int) ([]models.Event, scopes.PaginateMetadata)
 	Delete(eventId string)
 }
 
@@ -43,7 +44,7 @@ func (repo *EventRepository) FindByID(id string) models.Event {
 	return event
 }
 
-func (repo *EventRepository) FindAll(communityId string) []models.Event {
+func (repo *EventRepository) FindAll(communityId, search string, page, take int) ([]models.Event, scopes.PaginateMetadata) {
 	var events []models.Event
 
 	query := repo.DB.Table("events")
@@ -52,9 +53,14 @@ func (repo *EventRepository) FindAll(communityId string) []models.Event {
 		query = query.Where("community_id = ?", communityId)
 	}
 
-	query.Preload("Community.Owner").Order("created_at desc").Find(&events)
+	var totalRows int64
+	query.Count(&totalRows)
 
-	return events
+	query.Scopes(scopes.Paginate(page, take)).
+		Preload("Community.Owner").Order("created_at desc").
+		Find(&events)
+
+	return events, scopes.PaginateMeta(totalRows, page, take)
 }
 
 func (repo *EventRepository) Delete(eventId string) {

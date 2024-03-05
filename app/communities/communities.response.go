@@ -4,6 +4,7 @@ import (
 	"time"
 	"video-conf/app/users"
 	"video-conf/database/models"
+	"video-conf/database/scopes"
 )
 
 type ResponseType map[string]any
@@ -63,5 +64,17 @@ type CommunitiesResponseType struct {
 func CommunitiesResponse(communities []models.Community) ResponseType {
 	return ResponseType{
 		"communities": CommunitiesTransform(communities),
+	}
+}
+
+type CommunitiesMetaResponseType struct {
+	Communities []Community             `json:"communities"`
+	Meta        scopes.PaginateMetadata `json:"meta"`
+}
+
+func CommunitiesMetaResponse(communities []models.Community, meta scopes.PaginateMetadata) ResponseType {
+	return ResponseType{
+		"communities": CommunitiesTransform(communities),
+		"meta":        meta,
 	}
 }

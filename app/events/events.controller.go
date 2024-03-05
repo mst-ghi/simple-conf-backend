@@ -24,10 +24,14 @@ func NewEventsController() *EventsController {
 // @accept  json
 // @produce json
 // @param   community_id query string false "Community ID"
-// @success 200 {object} core.Response[EventsResponseType]
+// @Param   search query string false "search value"
+// @Param   page query string false "pagination page_value, default 1"
+// @Param   take query string false "pagination take_value, default 20"
+// @success 200 {object} core.Response[EventsMetaResponseType]
 func (ctrl *EventsController) FindAll(c *gin.Context) {
-	events := ctrl.service.FindAll(c.Query("community_id"))
-	ctrl.root.Success(c, EventsResponse(events))
+	search, page, take := core.PaginateQueries(c)
+	events, meta := ctrl.service.FindAll(c.Query("community_id"), search, page, take)
+	ctrl.root.Success(c, EventsMetaResponse(events, meta))
 }
 
 // @tags    Events

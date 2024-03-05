@@ -3,6 +3,7 @@ package repositories
 import (
 	"video-conf/database"
 	"video-conf/database/models"
+	"video-conf/database/scopes"
 
 	"gorm.io/gorm"
 )
@@ -12,7 +13,7 @@ type CommunityRepositoryInterface interface {
 	Create(community models.Community) models.Community
 	FindByID(id string) models.Community
 	FindByIDAndOwnerID(id, ownerId string) models.Community
-	FindAll() []models.Community
+	FindAll(search string, page, take int) ([]models.Community, scopes.PaginateMetadata)
 	OwnerCommunities(ownerId string) []models.Community
 	JoinedCommunities(ownerId string) []models.Community
 	FindOneCommunityUser(communityId, userId string) models.CommunityUser
@@ -73,10 +74,11 @@ func (repo *CommunityRepository) FindByIDAndOwnerID(id, ownerId string) models.C
 	return community
 }
 
-func (repo *CommunityRepository) FindAll() []models.Community {
+func (repo *CommunityRepository) FindAll(search string, page, take int) ([]models.Community, scopes.PaginateMetadata) {
 	var communities []models.Community
 
 	repo.DB.
+		Scopes(scopes.Paginate(page, take)).
 		Table("communities").
 		Where("status = ?", models.COMMUNITY_ACTIVE_STATUS).
 		Preload("Owner", func(tx *gorm.DB) *gorm.DB {
@@ -88,7 +90,12 @@ func (repo *CommunityRepository) FindAll() []models.Community {
 		Order("created_at desc").
 		Find(&communities)
 
-	return communities
+	var totalRows int64
+	repo.DB.Table("communities").
+		Where("status = ?", models.COMMUNITY_ACTIVE_STATUS).
+		Count(&totalRows)
+
+	return communities, scopes.PaginateMeta(totalRows, page, take)
 }
 
 func (repo *CommunityRepository) OwnerCommunities(ownerId string) []models.Community {

@@ -4,6 +4,7 @@ import (
 	"time"
 	"video-conf/app/communities"
 	"video-conf/database/models"
+	"video-conf/database/scopes"
 )
 
 type ResponseType map[string]any
@@ -63,5 +64,17 @@ type EventsResponseType struct {
 func EventsResponse(events []models.Event) ResponseType {
 	return ResponseType{
 		"events": EventsTransform(events),
+	}
+}
+
+type EventsMetaResponseType struct {
+	Events []Event                 `json:"events"`
+	Meta   scopes.PaginateMetadata `json:"meta"`
+}
+
+func EventsMetaResponse(events []models.Event, meta scopes.PaginateMetadata) ResponseType {
+	return ResponseType{
+		"events": EventsTransform(events),
+		"meta":   meta,
 	}
 }

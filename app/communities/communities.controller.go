@@ -23,10 +23,14 @@ func NewCommunitiesController() *CommunitiesController {
 // @summary get list of communities
 // @accept  json
 // @produce json
-// @success 200 {object} core.Response[CommunitiesResponseType]
+// @Param   search query string false "search value"
+// @Param   page query string false "pagination page_value, default 1"
+// @Param   take query string false "pagination take_value, default 20"
+// @success 200 {object} core.Response[CommunitiesMetaResponseType]
 func (ctrl *CommunitiesController) FindAll(c *gin.Context) {
-	communities := ctrl.service.FindAll()
-	ctrl.root.Success(c, CommunitiesResponse(communities))
+	search, page, take := core.PaginateQueries(c)
+	communities, meta := ctrl.service.FindAll(search, page, take)
+	ctrl.root.Success(c, CommunitiesMetaResponse(communities, meta))
 }
 
 // @tags     Communities

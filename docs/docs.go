@@ -227,11 +227,31 @@ const docTemplate = `{
                     "Communities"
                 ],
                 "summary": "get list of communities",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "search value",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pagination page_value, default 1",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pagination take_value, default 20",
+                        "name": "take",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/core.Response-communities_CommunitiesResponseType"
+                            "$ref": "#/definitions/core.Response-communities_CommunitiesMetaResponseType"
                         }
                     }
                 }
@@ -491,13 +511,31 @@ const docTemplate = `{
                         "description": "Community ID",
                         "name": "community_id",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search value",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pagination page_value, default 1",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pagination take_value, default 20",
+                        "name": "take",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/core.Response-events_EventsResponseType"
+                            "$ref": "#/definitions/core.Response-events_EventsMetaResponseType"
                         }
                     }
                 }
@@ -874,6 +912,11 @@ const docTemplate = `{
         },
         "/api/v1/users": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -896,6 +939,11 @@ const docTemplate = `{
         },
         "/api/v1/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -1027,6 +1075,20 @@ const docTemplate = `{
                 }
             }
         },
+        "communities.CommunitiesMetaResponseType": {
+            "type": "object",
+            "properties": {
+                "communities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/communities.Community"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/scopes.PaginateMetadata"
+                }
+            }
+        },
         "communities.CommunitiesResponseType": {
             "type": "object",
             "properties": {
@@ -1133,6 +1195,20 @@ const docTemplate = `{
                 }
             }
         },
+        "core.Response-communities_CommunitiesMetaResponseType": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/communities.CommunitiesMetaResponseType"
+                },
+                "errors": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "core.Response-communities_CommunitiesResponseType": {
             "type": "object",
             "properties": {
@@ -1175,11 +1251,11 @@ const docTemplate = `{
                 }
             }
         },
-        "core.Response-events_EventsResponseType": {
+        "core.Response-events_EventsMetaResponseType": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/events.EventsResponseType"
+                    "$ref": "#/definitions/events.EventsMetaResponseType"
                 },
                 "errors": {
                     "type": "object"
@@ -1367,7 +1443,7 @@ const docTemplate = `{
                 }
             }
         },
-        "events.EventsResponseType": {
+        "events.EventsMetaResponseType": {
             "type": "object",
             "properties": {
                 "events": {
@@ -1375,6 +1451,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/events.Event"
                     }
+                },
+                "meta": {
+                    "$ref": "#/definitions/scopes.PaginateMetadata"
                 }
             }
         },
@@ -1593,6 +1672,23 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 190,
                     "minLength": 2
+                }
+            }
+        },
+        "scopes.PaginateMetadata": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "type": "integer"
+                },
+                "take": {
+                    "type": "integer"
+                },
+                "total_pages": {
+                    "type": "integer"
+                },
+                "total_rows": {
+                    "type": "integer"
                 }
             }
         },

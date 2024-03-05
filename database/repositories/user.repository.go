@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"fmt"
 	"video-conf/database"
 	"video-conf/database/models"
 
@@ -49,7 +48,6 @@ func (repo *UserRepository) FindByID(id string) models.User {
 }
 
 func (repo *UserRepository) FindAll(exceptUserId string) []models.User {
-	fmt.Println("exceptUserId", exceptUserId)
 	var users []models.User
 	repo.DB.Table("users").Not("id = ?", exceptUserId).Find(&users)
 	return users

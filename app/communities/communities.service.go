@@ -4,10 +4,11 @@ import (
 	"video-conf/core"
 	"video-conf/database/models"
 	"video-conf/database/repositories"
+	"video-conf/database/scopes"
 )
 
 type CommunitiesServiceInterface interface {
-	FindAll() []models.Community
+	FindAll(search string, page, take int) ([]models.Community, scopes.PaginateMetadata)
 	OwnerCommunities(ownerId string) []models.Community
 	JoinedCommunities(ownerId string) []models.Community
 	FindOne(id string) (models.Community, core.Error)
@@ -27,8 +28,8 @@ func NewCommunitiesService() *CommunitiesService {
 	}
 }
 
-func (service *CommunitiesService) FindAll() []models.Community {
-	return service.repository.FindAll()
+func (service *CommunitiesService) FindAll(search string, page, take int) ([]models.Community, scopes.PaginateMetadata) {
+	return service.repository.FindAll(search, page, take)
 }
 
 func (service *CommunitiesService) OwnerCommunities(ownerId string) []models.Community {

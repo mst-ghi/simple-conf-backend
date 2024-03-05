@@ -4,10 +4,11 @@ import (
 	"video-conf/core"
 	"video-conf/database/models"
 	"video-conf/database/repositories"
+	"video-conf/database/scopes"
 )
 
 type EventsServiceInterface interface {
-	FindAll(communityID string) []models.Event
+	FindAll(communityId, search string, page, take int) ([]models.Event, scopes.PaginateMetadata)
 	FindOne(id string) (models.Event, core.Error)
 	Create(ownerId string, dto CreateDto) models.Event
 	Update(ownerId, id string, dto UpdateDto) core.Error
@@ -25,8 +26,8 @@ func NewEventsService() *EventsService {
 	}
 }
 
-func (service *EventsService) FindAll(communityID string) []models.Event {
-	return service.repository.FindAll(communityID)
+func (service *EventsService) FindAll(communityId, search string, page, take int) ([]models.Event, scopes.PaginateMetadata) {
+	return service.repository.FindAll(communityId, search, page, take)
 }
 
 func (service *EventsService) FindOne(id string) (models.Event, core.Error) {
