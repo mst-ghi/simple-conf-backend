@@ -807,6 +807,11 @@ paths:
     get:
       consumes:
       - application/json
+      parameters:
+      - description: search value
+        in: query
+        name: search
+        type: string
       produces:
       - application/json
       responses:

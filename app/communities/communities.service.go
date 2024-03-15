@@ -9,7 +9,7 @@ import (
 
 type CommunitiesServiceInterface interface {
 	FindAll(search string, page, take int) ([]models.Community, scopes.PaginateMetadata)
-	OwnerCommunities(ownerId string) []models.Community
+	OwnerCommunities(ownerId string, search string) []models.Community
 	JoinedCommunities(ownerId string) []models.Community
 	FindOne(id string) (models.Community, core.Error)
 	Create(ownerId string, dto CreateDto) models.Community
@@ -32,8 +32,8 @@ func (service *CommunitiesService) FindAll(search string, page, take int) ([]mod
 	return service.repository.FindAll(search, page, take)
 }
 
-func (service *CommunitiesService) OwnerCommunities(ownerId string) []models.Community {
-	return service.repository.OwnerCommunities(ownerId)
+func (service *CommunitiesService) OwnerCommunities(ownerId string, search string) []models.Community {
+	return service.repository.OwnerCommunities(ownerId, search)
 }
 
 func (service *CommunitiesService) JoinedCommunities(ownerId string) []models.Community {

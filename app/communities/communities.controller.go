@@ -39,10 +39,12 @@ func (ctrl *CommunitiesController) FindAll(c *gin.Context) {
 // @summary  get list of own communities
 // @accept   json
 // @produce  json
+// @Param    search query string false "search value"
 // @success  200 {object} core.Response[CommunitiesResponseType]
 func (ctrl *CommunitiesController) OwnerCommunities(c *gin.Context) {
 	user := core.User(c)
-	communities := ctrl.service.OwnerCommunities(user.ID)
+	search, _, _ := core.PaginateQueries(c)
+	communities := ctrl.service.OwnerCommunities(user.ID, search)
 	ctrl.root.Success(c, CommunitiesResponse(communities))
 }
 

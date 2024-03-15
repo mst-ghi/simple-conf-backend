@@ -337,6 +337,14 @@ const docTemplate = `{
                     "Communities"
                 ],
                 "summary": "get list of own communities",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "search value",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

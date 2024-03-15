@@ -14,7 +14,7 @@ type CommunityRepositoryInterface interface {
 	FindByID(id string) models.Community
 	FindByIDAndOwnerID(id, ownerId string) models.Community
 	FindAll(search string, page, take int) ([]models.Community, scopes.PaginateMetadata)
-	OwnerCommunities(ownerId string) []models.Community
+	OwnerCommunities(ownerId string, search string) []models.Community
 	JoinedCommunities(ownerId string) []models.Community
 	FindOneCommunityUser(communityId, userId string) models.CommunityUser
 	AppendCommunityUser(communityId, userId string) models.CommunityUser
@@ -77,9 +77,15 @@ func (repo *CommunityRepository) FindByIDAndOwnerID(id, ownerId string) models.C
 func (repo *CommunityRepository) FindAll(search string, page, take int) ([]models.Community, scopes.PaginateMetadata) {
 	var communities []models.Community
 
-	repo.DB.
+	query := repo.DB.
 		Scopes(scopes.Paginate(page, take)).
-		Table("communities").
+		Table("communities")
+
+	if search != "" {
+		query.Where("title LIKE ?", "%"+search+"%")
+	}
+
+	query.
 		Where("status = ?", models.COMMUNITY_ACTIVE_STATUS).
 		Preload("Owner", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select("id", "email", "name")
@@ -98,11 +104,17 @@ func (repo *CommunityRepository) FindAll(search string, page, take int) ([]model
 	return communities, scopes.PaginateMeta(totalRows, page, take)
 }
 
-func (repo *CommunityRepository) OwnerCommunities(ownerId string) []models.Community {
+func (repo *CommunityRepository) OwnerCommunities(ownerId string, search string) []models.Community {
 	var communities []models.Community
 
-	repo.DB.
-		Table("communities").
+	query := repo.DB.
+		Table("communities")
+
+	if search != "" {
+		query.Where("title LIKE ?", "%"+search+"%")
+	}
+
+	query.
 		Where("owner_id = ?", ownerId).
 		Preload("Owner", func(tx *gorm.DB) *gorm.DB {
 			return tx.Select("id", "email", "name")
