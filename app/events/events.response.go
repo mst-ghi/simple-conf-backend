@@ -15,6 +15,7 @@ type Event struct {
 	Title       string                `json:"title"`
 	Description string                `json:"description"`
 	Duration    uint8                 `json:"duration"`
+	Mode        string                `json:"mode"`
 	Status      string                `json:"status"`
 	StartAt     string                `json:"start_at"`
 	CreatedAt   string                `json:"created_at"`
@@ -23,17 +24,33 @@ type Event struct {
 }
 
 func EventTransform(event models.Event) Event {
+	if event.Community.ID != "" {
+		return Event{
+			ID:          event.ID,
+			CommunityID: event.CommunityID,
+			Title:       event.Title,
+			Description: event.Description,
+			Duration:    event.Duration,
+			Mode:        event.Mode,
+			Status:      event.Status,
+			StartAt:     event.StartAt.Format(time.RFC3339),
+			CreatedAt:   event.CreatedAt.Format(time.RFC3339),
+			UpdatedAt:   event.UpdatedAt.Format(time.RFC3339),
+			Community:   communities.CommunityTransform(event.Community),
+		}
+	}
 	return Event{
 		ID:          event.ID,
 		CommunityID: event.CommunityID,
 		Title:       event.Title,
 		Description: event.Description,
 		Duration:    event.Duration,
+		Mode:        event.Mode,
 		Status:      event.Status,
 		StartAt:     event.StartAt.Format(time.RFC3339),
 		CreatedAt:   event.CreatedAt.Format(time.RFC3339),
 		UpdatedAt:   event.UpdatedAt.Format(time.RFC3339),
-		Community:   communities.CommunityTransform(event.Community),
+		Community:   communities.Community{},
 	}
 }
 

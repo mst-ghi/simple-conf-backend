@@ -46,6 +46,7 @@ func (service *EventsService) Create(ownerId string, dto CreateDto) models.Event
 		Title:       dto.Title,
 		Description: dto.Description,
 		Duration:    dto.Duration,
+		Mode:        dto.Mode,
 		Status:      dto.Status,
 		StartAt:     dto.StartAt,
 	}
@@ -74,6 +75,7 @@ func (service *EventsService) Update(ownerId, id string, dto UpdateDto) core.Err
 				Title:       dto.Title,
 				Description: dto.Description,
 				Duration:    dto.Duration,
+				Mode:        dto.Mode,
 				Status:      dto.Status,
 				StartAt:     dto.StartAt,
 			},

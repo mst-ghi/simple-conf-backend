@@ -19,6 +19,7 @@ type Event struct {
 	Title       string `gorm:"type:varchar(191);not null"`
 	Description string `gorm:"type:varchar(255);not null"`
 	Duration    uint8  `gorm:"type:SMALLINT UNSIGNED;size:240;not null"`
+	Mode        string `gorm:"type:varchar(40);default:public"`
 	Status      string `gorm:"type:varchar(40);default:pending"`
 	StartAt     time.Time
 	CreatedAt   time.Time
