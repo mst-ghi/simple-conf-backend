@@ -22,6 +22,7 @@ func Migrate() {
 		&models.Room{},
 		&models.RoomUser{},
 		&models.Message{},
+		&models.Comment{},
 	)
 
 	if err != nil {

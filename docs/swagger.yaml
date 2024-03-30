@@ -70,6 +70,59 @@ definitions:
       tokens:
         $ref: '#/definitions/auth.Tokens'
     type: object
+  comments.Comment:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      model_id:
+        type: string
+      model_type:
+        type: string
+      user:
+        $ref: '#/definitions/users.User'
+      user_id:
+        type: string
+    type: object
+  comments.CommentResponseType:
+    properties:
+      comment:
+        $ref: '#/definitions/comments.Comment'
+    type: object
+  comments.CommentsResponseType:
+    properties:
+      comments:
+        items:
+          $ref: '#/definitions/comments.Comment'
+        type: array
+    type: object
+  comments.CreateDto:
+    properties:
+      content:
+        maxLength: 250
+        minLength: 2
+        type: string
+      model_id:
+        type: string
+      model_type:
+        type: string
+    required:
+    - content
+    - model_id
+    - model_type
+    type: object
+  comments.UpdateDto:
+    properties:
+      content:
+        maxLength: 250
+        minLength: 2
+        type: string
+    required:
+    - content
+    type: object
   communities.CommunitiesMetaResponseType:
     properties:
       communities:
@@ -146,6 +199,24 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/auth.TokensResponseType'
+      errors:
+        type: object
+      message:
+        type: string
+    type: object
+  core.Response-comments_CommentResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/comments.CommentResponseType'
+      errors:
+        type: object
+      message:
+        type: string
+    type: object
+  core.Response-comments_CommentsResponseType:
+    properties:
+      data:
+        $ref: '#/definitions/comments.CommentsResponseType'
       errors:
         type: object
       message:
@@ -271,6 +342,8 @@ definitions:
         maximum: 250
         minimum: 0
         type: integer
+      mode:
+        type: string
       start_at:
         type: string
       status:
@@ -283,6 +356,7 @@ definitions:
     - community_id
     - description
     - duration
+    - mode
     - start_at
     - status
     - title
@@ -300,6 +374,8 @@ definitions:
       duration:
         type: integer
       id:
+        type: string
+      mode:
         type: string
       start_at:
         type: string
@@ -334,6 +410,8 @@ definitions:
         maximum: 250
         minimum: 0
         type: integer
+      mode:
+        type: string
       start_at:
         type: string
       status:
@@ -345,6 +423,7 @@ definitions:
     required:
     - description
     - duration
+    - mode
     - start_at
     - status
     - title
@@ -647,6 +726,81 @@ paths:
       summary: fetch logged in user info
       tags:
       - Auth
+  /api/v1/comments:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Model ID
+        in: query
+        name: model_id
+        required: true
+        type: string
+      - description: Model type
+        in: query
+        name: model_type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-comments_CommentsResponseType'
+      summary: get list of comments
+      tags:
+      - Comments
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create comment inputs
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/comments.CreateDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Response-comments_CommentResponseType'
+      security:
+      - Bearer: []
+      summary: create new comment
+      tags:
+      - Comments
+  /api/v1/comments/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update comment inputs
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/comments.UpdateDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.SuccessResponse'
+      security:
+      - Bearer: []
+      summary: update comment
+      tags:
+      - Comments
   /api/v1/communities:
     get:
       consumes:

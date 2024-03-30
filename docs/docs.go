@@ -215,6 +215,125 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/comments": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "get list of comments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Model ID",
+                        "name": "model_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Model type",
+                        "name": "model_type",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response-comments_CommentsResponseType"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "create new comment",
+                "parameters": [
+                    {
+                        "description": "Create comment inputs",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/comments.CreateDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.Response-comments_CommentResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/comments/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "update comment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Comment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update comment inputs",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/comments.UpdateDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/core.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/communities": {
             "get": {
                 "consumes": [
@@ -1083,6 +1202,85 @@ const docTemplate = `{
                 }
             }
         },
+        "comments.Comment": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "model_id": {
+                    "type": "string"
+                },
+                "model_type": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/users.User"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "comments.CommentResponseType": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "$ref": "#/definitions/comments.Comment"
+                }
+            }
+        },
+        "comments.CommentsResponseType": {
+            "type": "object",
+            "properties": {
+                "comments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/comments.Comment"
+                    }
+                }
+            }
+        },
+        "comments.CreateDto": {
+            "type": "object",
+            "required": [
+                "content",
+                "model_id",
+                "model_type"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "maxLength": 250,
+                    "minLength": 2
+                },
+                "model_id": {
+                    "type": "string"
+                },
+                "model_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "comments.UpdateDto": {
+            "type": "object",
+            "required": [
+                "content"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "maxLength": 250,
+                    "minLength": 2
+                }
+            }
+        },
         "communities.CommunitiesMetaResponseType": {
             "type": "object",
             "properties": {
@@ -1194,6 +1392,34 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/auth.TokensResponseType"
+                },
+                "errors": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "core.Response-comments_CommentResponseType": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/comments.CommentResponseType"
+                },
+                "errors": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "core.Response-comments_CommentsResponseType": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/comments.CommentsResponseType"
                 },
                 "errors": {
                     "type": "object"
@@ -1377,6 +1603,7 @@ const docTemplate = `{
                 "community_id",
                 "description",
                 "duration",
+                "mode",
                 "start_at",
                 "status",
                 "title"
@@ -1394,6 +1621,9 @@ const docTemplate = `{
                     "type": "integer",
                     "maximum": 250,
                     "minimum": 0
+                },
+                "mode": {
+                    "type": "string"
                 },
                 "start_at": {
                     "type": "string"
@@ -1427,6 +1657,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "id": {
+                    "type": "string"
+                },
+                "mode": {
                     "type": "string"
                 },
                 "start_at": {
@@ -1470,6 +1703,7 @@ const docTemplate = `{
             "required": [
                 "description",
                 "duration",
+                "mode",
                 "start_at",
                 "status",
                 "title"
@@ -1484,6 +1718,9 @@ const docTemplate = `{
                     "type": "integer",
                     "maximum": 250,
                     "minimum": 0
+                },
+                "mode": {
+                    "type": "string"
                 },
                 "start_at": {
                     "type": "string"
