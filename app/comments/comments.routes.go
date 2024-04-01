@@ -9,12 +9,12 @@ import (
 func RegisterRoutes(router *gin.RouterGroup) {
 	ctrl := NewCommentsController()
 
-	guestGroup := router.Group("/events")
+	guestGroup := router.Group("/comments")
 	{
 		guestGroup.GET("", ctrl.FindAll)
 	}
 
-	authGroup := router.Group("/events").Use(middlewares.Auth)
+	authGroup := router.Group("/comments").Use(middlewares.Auth)
 	{
 		authGroup.POST("", ctrl.Create)
 		authGroup.PUT("/:id", ctrl.Update)

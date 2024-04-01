@@ -33,10 +33,11 @@ func (repo *CommentRepository) FindByModelID(modelID, modelType string) []models
 	var comments []models.Comment
 
 	repo.DB.
+		Table("comments").
 		Preload("User").
 		Where("model_id = ?", modelID).
 		Where("model_type = ?", modelType).
-		First(&comments)
+		Find(&comments)
 
 	return comments
 }
@@ -45,6 +46,7 @@ func (repo *CommentRepository) FindByID(id, userId string) models.Comment {
 	var comment models.Comment
 
 	repo.DB.
+		Table("comments").
 		Preload("User").
 		Where("id = ?", id).
 		Where("user_id = ?", userId).
