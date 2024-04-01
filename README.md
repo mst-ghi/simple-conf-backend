@@ -38,6 +38,12 @@ $ go run . serve
 
 _Swagger document is available on :_ **/api/docs/index.html**
 
+## Demo
+[simple-conf-backend.webm](https://github.com/mst-ghi/simple-conf-backend/assets/34771560/6df2c42f-f7bd-4d09-877a-382e224ec704)
+
+[simple-conf-backend-code.webm](https://github.com/mst-ghi/simple-conf-backend/assets/34771560/dc66b809-45ca-4a59-aa2a-c729b4078c70)
+
+
 ## Source structure
 
 ```bash
