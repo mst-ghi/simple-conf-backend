@@ -1,11 +1,11 @@
 package repositories
 
 import (
+	"simple-conf/database"
+	"simple-conf/database/models"
+	"simple-conf/pkg/helpers"
 	"sync"
 	"time"
-	"video-conf/database"
-	"video-conf/database/models"
-	"video-conf/pkg/helpers"
 
 	"gorm.io/gorm"
 )

@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"video-conf/core"
-	"video-conf/pkg/messages"
+	"simple-conf/core"
+	"simple-conf/pkg/messages"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-errors/errors"

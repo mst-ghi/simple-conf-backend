@@ -1,8 +1,8 @@
 package messages
 
 import (
-	"video-conf/core"
-	"video-conf/database/models"
+	"simple-conf/core"
+	"simple-conf/database/models"
 )
 
 type MessagesGateway struct {

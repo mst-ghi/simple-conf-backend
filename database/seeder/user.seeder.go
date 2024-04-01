@@ -2,7 +2,7 @@ package seeder
 
 import (
 	"fmt"
-	"video-conf/database/models"
+	"simple-conf/database/models"
 
 	"github.com/go-faker/faker/v4"
 	"gorm.io/gorm"

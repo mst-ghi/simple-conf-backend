@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"video-conf/app/users"
-	core "video-conf/core"
+	"simple-conf/app/users"
+	core "simple-conf/core"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,8 +1,8 @@
 package seeder
 
 import (
-	"video-conf/core/config"
-	"video-conf/database"
+	"simple-conf/core/config"
+	"simple-conf/database"
 )
 
 func Seeder() {

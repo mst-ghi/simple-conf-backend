@@ -2,9 +2,9 @@ package scheduler
 
 import (
 	"log"
+	"simple-conf/database"
+	"simple-conf/database/models"
 	"time"
-	"video-conf/database"
-	"video-conf/database/models"
 
 	"github.com/go-co-op/gocron/v2"
 	"gorm.io/gorm"

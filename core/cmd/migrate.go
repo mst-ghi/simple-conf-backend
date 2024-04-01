@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"video-conf/database/migrations"
+	"simple-conf/database/migrations"
 
 	"github.com/spf13/cobra"
 )

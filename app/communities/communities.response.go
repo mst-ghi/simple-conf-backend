@@ -1,10 +1,10 @@
 package communities
 
 import (
+	"simple-conf/app/users"
+	"simple-conf/database/models"
+	"simple-conf/database/scopes"
 	"time"
-	"video-conf/app/users"
-	"video-conf/database/models"
-	"video-conf/database/scopes"
 )
 
 type ResponseType map[string]any

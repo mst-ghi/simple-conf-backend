@@ -1,9 +1,9 @@
 package messages
 
 import (
+	"simple-conf/app/users"
+	"simple-conf/database/models"
 	"time"
-	"video-conf/app/users"
-	"video-conf/database/models"
 )
 
 type ResponseType map[string]any

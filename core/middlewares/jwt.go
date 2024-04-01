@@ -3,10 +3,10 @@ package middlewares
 import (
 	"errors"
 	"net/http"
+	"simple-conf/core"
+	"simple-conf/database/repositories"
+	"simple-conf/pkg/messages"
 	"strings"
-	"video-conf/core"
-	"video-conf/database/repositories"
-	"video-conf/pkg/messages"
 
 	"github.com/gin-gonic/gin"
 )

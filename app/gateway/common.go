@@ -1,7 +1,7 @@
 package gateway
 
 import (
-	"video-conf/pkg/helpers"
+	"simple-conf/pkg/helpers"
 )
 
 type CuidGenerator struct {

@@ -1,14 +1,14 @@
 package app
 
 import (
-	"video-conf/app/auth"
-	"video-conf/app/comments"
-	"video-conf/app/communities"
-	"video-conf/app/events"
-	"video-conf/app/messages"
-	"video-conf/app/rooms"
-	"video-conf/app/users"
-	"video-conf/core"
+	"simple-conf/app/auth"
+	"simple-conf/app/comments"
+	"simple-conf/app/communities"
+	"simple-conf/app/events"
+	"simple-conf/app/messages"
+	"simple-conf/app/rooms"
+	"simple-conf/app/users"
+	"simple-conf/core"
 
 	"github.com/gin-gonic/gin"
 )

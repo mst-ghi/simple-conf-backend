@@ -2,8 +2,8 @@ package gateway
 
 import (
 	"log"
+	"simple-conf/database/repositories"
 	"strings"
-	"video-conf/database/repositories"
 
 	"github.com/gin-gonic/gin"
 	socketio "github.com/googollee/go-socket.io"

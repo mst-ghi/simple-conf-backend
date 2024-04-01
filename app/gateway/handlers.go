@@ -1,7 +1,7 @@
 package gateway
 
 import (
-	"video-conf/app/messages"
+	"simple-conf/app/messages"
 
 	socketio "github.com/googollee/go-socket.io"
 )

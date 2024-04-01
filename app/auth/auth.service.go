@@ -1,10 +1,10 @@
 package auth
 
 import (
+	"simple-conf/core"
+	"simple-conf/database/models"
+	"simple-conf/database/repositories"
 	"sync"
-	"video-conf/core"
-	"video-conf/database/models"
-	"video-conf/database/repositories"
 )
 
 type AuthServiceInterface interface {

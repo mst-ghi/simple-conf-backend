@@ -3,9 +3,9 @@ package migrations
 import (
 	"fmt"
 	"log"
-	"video-conf/core/config"
-	"video-conf/database"
-	"video-conf/database/models"
+	"simple-conf/core/config"
+	"simple-conf/database"
+	"simple-conf/database/models"
 )
 
 func Migrate() {

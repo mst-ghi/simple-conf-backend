@@ -1,4 +1,4 @@
-module video-conf
+module simple-conf
 
 go 1.21.1
 

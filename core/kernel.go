@@ -1,8 +1,8 @@
 package core
 
 import (
+	"simple-conf/database/models"
 	"strconv"
-	"video-conf/database/models"
 
 	"github.com/gin-gonic/gin"
 )

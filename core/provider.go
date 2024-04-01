@@ -2,8 +2,8 @@ package core
 
 import (
 	"net/http"
-	"video-conf/pkg/messages"
-	"video-conf/pkg/validation"
+	"simple-conf/pkg/messages"
+	"simple-conf/pkg/validation"
 
 	"github.com/gin-gonic/gin"
 )

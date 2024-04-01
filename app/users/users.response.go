@@ -1,8 +1,8 @@
 package users
 
 import (
+	"simple-conf/database/models"
 	"time"
-	"video-conf/database/models"
 )
 
 type ResponseType map[string]any

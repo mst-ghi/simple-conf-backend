@@ -1,9 +1,9 @@
 package comments
 
 import (
-	"video-conf/core"
-	"video-conf/database/models"
-	"video-conf/database/repositories"
+	"simple-conf/core"
+	"simple-conf/database/models"
+	"simple-conf/database/repositories"
 )
 
 type CommentsServiceInterface interface {

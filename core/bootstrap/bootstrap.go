@@ -1,12 +1,12 @@
 package bootstrap
 
 import (
-	"video-conf/app/gateway"
-	"video-conf/core"
-	"video-conf/core/config"
-	"video-conf/core/engine"
-	"video-conf/core/scheduler"
-	"video-conf/database"
+	"simple-conf/app/gateway"
+	"simple-conf/core"
+	"simple-conf/core/config"
+	"simple-conf/core/engine"
+	"simple-conf/core/scheduler"
+	"simple-conf/database"
 )
 
 func Serve() {

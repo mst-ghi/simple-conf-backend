@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"video-conf/database"
-	"video-conf/database/models"
+	"simple-conf/database"
+	"simple-conf/database/models"
 
 	"gorm.io/gorm"
 )

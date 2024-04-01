@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"video-conf/core/bootstrap"
+	"simple-conf/core/bootstrap"
 
 	"github.com/spf13/cobra"
 )

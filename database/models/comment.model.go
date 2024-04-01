@@ -1,8 +1,8 @@
 package models
 
 import (
+	"simple-conf/pkg/helpers"
 	"time"
-	"video-conf/pkg/helpers"
 
 	"gorm.io/gorm"
 )

@@ -3,8 +3,8 @@ package database
 import (
 	"log"
 	"os"
+	"simple-conf/core/config"
 	"time"
-	"video-conf/core/config"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

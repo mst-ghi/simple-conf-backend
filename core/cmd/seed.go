@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"video-conf/database/seeder"
+	"simple-conf/database/seeder"
 
 	"github.com/spf13/cobra"
 )

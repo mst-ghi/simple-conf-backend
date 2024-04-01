@@ -1,10 +1,10 @@
 package events
 
 import (
-	"video-conf/core"
-	"video-conf/database/models"
-	"video-conf/database/repositories"
-	"video-conf/database/scopes"
+	"simple-conf/core"
+	"simple-conf/database/models"
+	"simple-conf/database/repositories"
+	"simple-conf/database/scopes"
 )
 
 type EventsServiceInterface interface {

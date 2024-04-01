@@ -1,7 +1,7 @@
 package messages
 
 import (
-	"video-conf/core"
+	"simple-conf/core"
 
 	"github.com/gin-gonic/gin"
 )

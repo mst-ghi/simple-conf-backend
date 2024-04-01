@@ -1,7 +1,7 @@
 package main
 
 import (
-	"video-conf/core/cmd"
+	"simple-conf/core/cmd"
 )
 
 // @securityDefinitions.apikey Bearer

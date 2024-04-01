@@ -1,9 +1,9 @@
 package models
 
 import (
+	"simple-conf/core/config"
+	"simple-conf/pkg/helpers"
 	"time"
-	"video-conf/core/config"
-	"video-conf/pkg/helpers"
 
 	"github.com/golang-module/carbon/v2"
 	"gorm.io/gorm"

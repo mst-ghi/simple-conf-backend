@@ -1,10 +1,10 @@
 package events
 
 import (
+	"simple-conf/app/communities"
+	"simple-conf/database/models"
+	"simple-conf/database/scopes"
 	"time"
-	"video-conf/app/communities"
-	"video-conf/database/models"
-	"video-conf/database/scopes"
 )
 
 type ResponseType map[string]any

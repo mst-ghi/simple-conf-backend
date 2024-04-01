@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"video-conf/core/middlewares"
+	"simple-conf/core/middlewares"
 
 	"github.com/gin-gonic/gin"
 )

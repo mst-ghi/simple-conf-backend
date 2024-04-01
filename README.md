@@ -23,7 +23,7 @@ A simple project for communities. This project contain **Communities**, **Events
 
 ```bash
 $ git clone git@github.com:mst-ghi/simple-conf-backend.git
-$ cd ./video-conf-backend
+$ cd ./simple-conf-backend
 $ cp .env.example .env #Update Database configuration
 $ go mod download
 $ go run . serve

@@ -8,7 +8,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
-	"video-conf/core/config"
+	"simple-conf/core/config"
 )
 
 func Encrypt(stringToEncrypt string) (encryptedString string) {
