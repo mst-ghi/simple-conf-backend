@@ -1,12 +1,10 @@
 <!-- @format -->
 
-# Video Conf Backend Project
+# Simple Conf Backend Project
 
-A simple project for communities. This project contain **Communities**, **Events**, **Chat**, **Video Chat** and etc. <br/>
+A simple project for communities. This project contain **Communities**, **Events**, **Chat**, **Video/Voice Call** and etc. <br/>
 
-[Frontend Source Code](https://github.com/mst-ghi/video-conf-frontend)
-<br />
-**Development is ongoing...**
+[Frontend Source Code](https://github.com/mst-ghi/simple-conf-frontend)
 
 ## Technical Features
 
@@ -19,11 +17,12 @@ A simple project for communities. This project contain **Communities**, **Events
 -   Base response contract
 -   SocketIO
 -   Chat & Video Call
+-   Scheduler
 
 ## Clone and Run
 
 ```bash
-$ git clone git@github.com:mst-ghi/video-conf-backend.git
+$ git clone git@github.com:mst-ghi/simple-conf-backend.git
 $ cd ./video-conf-backend
 $ cp .env.example .env #Update Database configuration
 $ go mod download
@@ -49,6 +48,12 @@ _Swagger document is available on :_ **/api/docs/index.html**
 │   │   ├── auth.responses.go
 │   │   ├── auth.routes.go
 │   │   └── auth.service.go
+│   ├── comments
+│   │   ├── comments.controller.go
+│   │   ├── comments.dto.go
+│   │   ├── comments.response.go
+│   │   ├── comments.routes.go
+│   │   └── comments.service.go
 │   ├── communities
 │   │   ├── communities.controller.go
 │   │   ├── communities.dto.go
@@ -102,6 +107,9 @@ _Swagger document is available on :_ **/api/docs/index.html**
 │   ├── middlewares
 │   │   ├── cors.go
 │   │   └── jwt.go
+│   ├── scheduler
+│   │   ├── events.scheduler.go
+│   │   └── scheduler.go
 │   ├── swagger
 │   │   └── swagger.go
 │   ├── kernel.go
@@ -110,6 +118,7 @@ _Swagger document is available on :_ **/api/docs/index.html**
 │   ├── migrations
 │   │   └── migrations.go
 │   ├── models
+│   │   ├── comment.model.go
 │   │   ├── community.model.go
 │   │   ├── event.model.go
 │   │   ├── message.model.go
@@ -117,12 +126,15 @@ _Swagger document is available on :_ **/api/docs/index.html**
 │   │   ├── token.model.go
 │   │   └── user.model.go
 │   ├── repositories
+│   │   ├── comment.repository.go
 │   │   ├── community.repository.go
 │   │   ├── event.repository.go
 │   │   ├── message.repository.go
 │   │   ├── room.repository.go
 │   │   ├── token.repository.go
 │   │   └── user.repository.go
+│   ├── scopes
+│   │   └── paginate.scope.go
 │   ├── seeder
 │   │   ├── seeder.go
 │   │   └── user.seeder.go
